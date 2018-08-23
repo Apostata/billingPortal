@@ -122,10 +122,10 @@ const OAuthLogout = () =>{
 }
 
 
-const expiresToken = (time, date) => {
-    return dispatch =>{
-        setTimeout(()=>{
-            //TODO verify logged
-        }, time)
-    }
-};
+// const expiresToken = (time, date) => {
+//     return dispatch =>{
+//         setTimeout(()=>{
+//             //TODO verify logged
+//         }, time)
+//     }
+// };

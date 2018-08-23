@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as actions from './store/actions';
+import Layout from './containers/Layout/Layout';
 import Auth from './containers/Auth/Auth';
 import Test from './containers/Test';
 import Spinner from './components/UI/Spinner/Spinner';
@@ -11,6 +12,7 @@ import Spinner from './components/UI/Spinner/Spinner';
 class App extends Component {
 
   componentWillMount(){  
+    console.log('App');
     this.props.verifyLogged('billing');
     
     const path = this.props.location.pathname;
@@ -25,23 +27,27 @@ class App extends Component {
     
     if(this.props.isAuthenticated){
       renderAuthenticated =(
-        <Switch>
-          <Route path="/" exact component={Test} />
-          <Route path="/auth" component={Auth} />
-          <Redirect to="/" />
-        </Switch>)
+        <Layout>
+          <Switch>
+            <Route path="/" exact component={Test} />
+            <Route path="/auth" component={Auth} />
+            <Redirect to="/" />
+          </Switch>
+        </Layout>
+      )
     }
     else{
       if(!this.props.isLoading){
-        renderAuthenticated =( 
-          <Switch>
-            <Route path="/auth" component={Auth} />
-            <Redirect to="/auth" />
-          </Switch>);
+        renderAuthenticated =(
+            <Switch>
+              <Route path="/auth" component={Auth} />
+              <Redirect to="/auth" />
+            </Switch>
+          );
       }
     }
 
-    return renderAuthenticated;
+    return (renderAuthenticated);
   }
 };
 

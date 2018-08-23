@@ -2,12 +2,16 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom'
 import * as actions from '../../store/actions';
-import Spinner from '../../components/UI/Spinner/Spinner';
-
+import styles from './Auth.scss';
+import Modal from '../../components/UI/Modal/Modal';
 
 class Auth extends Component{
+    state = {
+        showModal: true
+    }
+
     componentDidMount(){
-        console.log('auth component')
+        console.log('auth component');
         if(window.location.search !== "" && !this.props.isAuthenticated){
             var urlParams = new URLSearchParams(window.location.search);
             for (let entry of urlParams.entries()){
@@ -16,6 +20,13 @@ class Auth extends Component{
                 }
             }
         }
+    }
+
+    toggleModal(){
+        this.setState({
+            ...this.state,
+            showModal: !this.state.showModal
+        });
     }
 
     getToken(code, name){
@@ -34,13 +45,21 @@ class Auth extends Component{
     }
     render(){
 
-        let renderAuthenticated = <a onClick={(e) => this.chooseOAuthService(e,'billing')} href="#">Billing</a>;
+        let renderAuthenticated = (
+            <Modal show={this.state.showModal} clicked={this.toggleModal.bind(this)}>
+                <a onClick={(e) => this.chooseOAuthService(e,'billing')} >Billing</a>
+            </Modal>
+        );
 
         if(this.props.isAuthenticated){
             renderAuthenticated = <Redirect to={this.props.redirectTo} />;
         }
 
-        return renderAuthenticated;
+        return (
+            <div className={styles.Auth}>
+                {renderAuthenticated}
+            </div>
+        );
     }
 };
 

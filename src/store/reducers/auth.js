@@ -21,7 +21,7 @@ const logout = (state, action) =>{
     }
     return{
         ...state,
-        loading: initialState.loading,
+        loading: false,
         token: initialState.token,
         refreshToken: initialState.refreshToken,
         message: action.message
@@ -31,7 +31,7 @@ const logout = (state, action) =>{
 const authSuccess = (state, action) => {
     return {
         ...state,
-        loading:false,
+        loading: false,
         token: action.token,
         refreshToken: action.refreshToken,
         redirectPath: '/'
