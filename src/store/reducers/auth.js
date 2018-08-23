@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    loading: false,
+    loading: true,
     token: null,
     refreshToken: null,
     message: null,
@@ -33,7 +33,8 @@ const authSuccess = (state, action) => {
         ...state,
         loading:false,
         token: action.token,
-        refreshToken: action.refreshToken
+        refreshToken: action.refreshToken,
+        redirectPath: '/'
     }
 };
 
@@ -42,13 +43,6 @@ const authError = (state, action) => {
         ...state,
         loading:false,
         message: action.error
-    }
-};
-
-const redirectPath = (state, action) => {
-    return {
-        ...state,
-        redirectPath: action.redirectPath
     }
 };
 
@@ -65,9 +59,6 @@ const reducer = (state = initialState, action) =>{
         
         case actionTypes.AUTH_LOGOUT:
             return logout(state, action);
-        
-        case actionTypes.AUTH_REDIRECT:
-            return redirectPath(state, action);
 
         default :
             return state;

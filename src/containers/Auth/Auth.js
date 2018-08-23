@@ -2,14 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom'
 import * as actions from '../../store/actions';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 
 class Auth extends Component{
     componentDidMount(){
-
+        console.log('auth component')
         if(window.location.search !== "" && !this.props.isAuthenticated){
             var urlParams = new URLSearchParams(window.location.search);
-            
             for (let entry of urlParams.entries()){
                 if(entry[0] === 'code'){
                     this.getToken(entry[1], 'billing');
@@ -47,7 +47,8 @@ class Auth extends Component{
 const mapStateToProps = state =>{
     return {
         isAuthenticated: state.auth.token !== null,
-        redirectTo: state.auth.redirectPath
+        redirectTo: state.auth.redirectPath,
+        isLoading: state.auth.loading
     };
 };
 

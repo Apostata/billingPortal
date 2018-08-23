@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class Test extends Component{
     componentDidMount(){
-        console.log(this.props.isAuthenticated);
     }    
     render(){
        
-        let renderAuthenticated = <p>Teste</p>
+        let renderAuthenticated = <p>Teste</p>;
+
         if(!this.props.isAuthenticated){
             renderAuthenticated = <Redirect to="/auth" />;
         }

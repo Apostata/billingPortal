@@ -5,7 +5,6 @@ export const asyncGetToken =(opts) =>{
     return dispatch =>{
         import(`../../json/${opts.name}`)
         .then(json=>{
-            console.log(json);
             dispatch(getToken(json, opts));
         })
         .catch(error => {
@@ -34,7 +33,6 @@ const getToken = (json, opts) =>{
 
         axios.post(url, data, config)
         .then(response=>{
-            console.log(response)
             const tokenExpirationTime = response.data.expires_in;
             const tokenExpirationDate = new Date(new Date().getTime() + tokenExpirationTime);
             
@@ -60,7 +58,7 @@ export const asyncLogout = (message=null) =>{
 
 export const verifyLogged = (name) =>{
     return dispatch =>{
-        const token = localStorage.getItem('token') !== null; 
+        const token = localStorage.getItem('token'); 
         
         if(!token){
             dispatch(asyncLogout());
@@ -82,7 +80,7 @@ export const verifyLogged = (name) =>{
                 }
             }
             else{
-                console.log('token ainda ativo, recaclcular tempo de expiração');
+                console.log('token ainda ativo, recalcular tempo de expiração');
                 dispatch(OAuthSuccess(token, refreshToken));
             }
         }

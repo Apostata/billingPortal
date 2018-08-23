@@ -5,40 +5,50 @@ import {connect} from 'react-redux';
 import * as actions from './store/actions';
 import Auth from './containers/Auth/Auth';
 import Test from './containers/Test';
+import Spinner from './components/UI/Spinner/Spinner';
 
 
 class App extends Component {
-  componentWillMount(){
-    const path = this.props.location.pathname;
+
+  componentWillMount(){  
     this.props.verifyLogged('billing');
+    
+    const path = this.props.location.pathname;
     if(path !== "/auth" && path !=='/'){
       this.props.redirectAfterLogged(path);
     }
   }
 
+
   render() {
-
-    let renderAuthenticated =(
-      <Switch>
-        <Route path="/" exact component={Test} />
-        <Route path="/auth" component={Auth} />
-        <Redirect to="/" />
-      </Switch>);
-
-    if(!this.props.isAuthenticated){
-      renderAuthenticated =( 
+    let renderAuthenticated = <Spinner />;
+    
+    if(this.props.isAuthenticated){
+      renderAuthenticated =(
         <Switch>
+          <Route path="/" exact component={Test} />
           <Route path="/auth" component={Auth} />
-          <Redirect to="/auth" />
-        </Switch>);
+          <Redirect to="/" />
+        </Switch>)
     }
+    else{
+      if(!this.props.isLoading){
+        renderAuthenticated =( 
+          <Switch>
+            <Route path="/auth" component={Auth} />
+            <Redirect to="/auth" />
+          </Switch>);
+      }
+    }
+
     return renderAuthenticated;
   }
 };
 
 const mapStateToProps = state =>{
   return{
-    isAuthenticated: state.auth.token !== null
+    isAuthenticated: state.auth.token !== null,
+    isLoading: state.auth.loading
   }
 }
 
