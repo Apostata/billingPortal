@@ -1,41 +1,53 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
-const asyncReadAuthRoutes = (opts) =>{
-    return import(`../../json/${opts.name}`);
-};
-
 export const asyncGetToken =(opts) =>{
-    return dispatch => {
-        dispatch(OAuthStart());
-
-        asyncReadAuthRoutes(opts)
+    return dispatch =>{
+        import(`../../json/${opts.name}`)
         .then(json=>{
-            let url = json.tokenUrl;
-            if(opts.type === 'refresh_token'){
-                url = json.refreshTokenUrl;
-            }
-
-            axios.post(`${url}?client_id=${process.env.REACT_APP_CLIENT_ID}&client_secret=${process.env.REACT_APP_CLIENT_SECRET}&redirect_uri=${json.redirectUri}&grant_type=authorization_code&code=${opts.code}`)
-            .then(response=>{
-                console.log(response)
-                const tokenExpirationTime = response.data.expires_in;
-                const tokenExpirationDate = new Date(new Date().getTime() + tokenExpirationTime);
-                
-                localStorage.setItem('token', response.data.access_token);
-                localStorage.setItem('tokenExpDate', tokenExpirationDate);
-                sessionStorage.setItem('refreshtoken', response.data.refresh_token);
-                dispatch(OAuthSuccess(response.data.access_token, response.data.refresh_token));
-
-            }).catch(error=>{
-                dispatch(OAuthError(error));
-            });     
+            console.log(json);
+            dispatch(getToken(json, opts));
         })
         .catch(error => {
             this.props.asyncLogout();
         });
     }
 };
+
+const getToken = (json, opts) =>{
+    return dispatch =>{
+        dispatch(OAuthStart());
+
+        let data = `redirect_uri=${json.redirectUri}&grant_type=authorization_code&code=${opts.code}`;
+        const url = json.tokenUrl;
+
+        if(opts.type === 'refresh_token'){
+            data = `grant_type=${opts.type}&${opts.type}=${opts.code}`
+        }
+        const toBase64 = `${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_CLIENT_SECRET}`;
+        const config ={
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Basic ${window.btoa(toBase64)}`
+            }
+        };
+
+        axios.post(url, data, config)
+        .then(response=>{
+            console.log(response)
+            const tokenExpirationTime = response.data.expires_in;
+            const tokenExpirationDate = new Date(new Date().getTime() + tokenExpirationTime);
+            
+            localStorage.setItem('token', response.data.access_token);
+            localStorage.setItem('tokenExpDate', tokenExpirationDate);
+            sessionStorage.setItem('refreshtoken', response.data.refresh_token);
+            dispatch(OAuthSuccess(response.data.access_token, response.data.refresh_token));
+
+        }).catch(error=>{
+            dispatch(OAuthError(error));
+        });     
+    }
+}
 
 export const asyncLogout = (message=null) =>{
     return dispatch =>{
