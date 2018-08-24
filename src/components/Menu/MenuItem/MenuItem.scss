@@ -1,0 +1,17 @@
+@import '../../../sass/base';
+
+.MenuItem{
+    color: map-get($cores, 'branco');
+    background: map-get($cores, 'cinza-escuro');
+    transition: all 300ms ease-in-out 0ms;
+    min-height: 50px;
+    
+    &.active{
+        background: map-get($cores, 'preto');
+    }
+
+    &:hover{
+        color: map-get($cores, 'cinza-claro');
+        background: map-get($cores, 'preto');
+    }
+}
