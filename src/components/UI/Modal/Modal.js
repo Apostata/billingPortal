@@ -12,15 +12,17 @@ import styles from './Modal.scss';
 class Modal extends Component {
     
     render(){
-        let classes = ["modal "];
+        let classes = [styles.Modal];
         if(this.props.show){
             classes.push(styles.Show);
         }
 
+        console.log(classes);
+
         return(
             <Fragment>
-                <Backdrop show={this.props.show} />
-                <div className={classes.join("")} >
+                {this.props.backdrop ? <Backdrop show={this.props.show} />: null}
+                <div className={classes.join(" ")} >
                     {this.props.children}
                 </div>
             </Fragment>

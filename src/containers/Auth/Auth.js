@@ -10,16 +10,29 @@ class Auth extends Component{
         showModal: true
     }
 
-    componentDidMount(){
-        console.log('auth component');
-        if(window.location.search !== "" && !this.props.isAuthenticated){
-            var urlParams = new URLSearchParams(window.location.search);
-            for (let entry of urlParams.entries()){
-                if(entry[0] === 'code'){
-                    this.getToken(entry[1], 'billing');
+    componentWillMount(){
+        if(this.props.isAuthenticated){
+            this.props.history.replace('/');
+        }
+        else{
+            if(window.location.search !== ""){
+                var urlParams = new URLSearchParams(window.location.search);
+                
+                for (let entry of urlParams.entries()){
+                    if(entry[0] === 'code'){
+                        this.getToken(entry[1], 'billing');
+                    }
                 }
             }
+            else{
+                this.chooseOAuthService('billing');
+            }
         }
+    }
+
+    componentDidMount(){
+        console.log('auth component');
+        
     }
 
     toggleModal(){
@@ -33,8 +46,9 @@ class Auth extends Component{
         this.props.asyncGetToken({name, code})
     }
 
-    chooseOAuthService(e, name){
-        e.preventDefault();
+    //chooseOAuthService(e, name){
+    chooseOAuthService(name){
+        //e.preventDefault();
         import(`../../json/${name}`)
         .then(json=>{
             const url = `${json.authorizeUrl}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${json.redirectUri}&response_type=code`;
@@ -45,21 +59,22 @@ class Auth extends Component{
     }
     render(){
 
-        let renderAuthenticated = (
-            <Modal show={this.state.showModal} clicked={this.toggleModal.bind(this)}>
-                <a onClick={(e) => this.chooseOAuthService(e,'billing')} >Billing</a>
-            </Modal>
-        );
+        // let renderAuthenticated = (
+        //     <Modal backdrop={true} show={this.state.showModal} clicked={this.toggleModal.bind(this)}>
+        //         <a onClick={(e) => this.chooseOAuthService(e,'billing')} >Billing</a>
+        //     </Modal>
+        // );
 
-        if(this.props.isAuthenticated){
-            renderAuthenticated = <Redirect to={this.props.redirectTo} />;
-        }
+        // if(this.props.isAuthenticated){
+        //     renderAuthenticated = <Redirect to={this.props.redirectTo} />;
+        // }
 
-        return (
-            <div className={styles.Auth}>
-                {renderAuthenticated}
-            </div>
-        );
+        // return (
+        //     <div className={styles.Auth}>
+        //         {renderAuthenticated}
+        //     </div>
+        // );
+        return(null)
     }
 };
 

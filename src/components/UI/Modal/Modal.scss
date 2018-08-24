@@ -1,3 +1,26 @@
-.Show{
-   
-}
+@import '../../../sass/base';
+
+.Modal{
+    width:  40%;
+    height: 50%;
+    min-width: 100px;
+    min-height: 100px;
+    max-height: 70%;
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    margin-left: -20%;
+    background: map-get($cores, 'branco');
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    z-index: 100;
+    transform: translateY(-100vh);
+    opacity: 0;
+    transition: all 300ms ease-in-out 0ms;
+
+    &.Show{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}    
