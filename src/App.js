@@ -6,13 +6,13 @@ import * as actions from './store/actions';
 import Layout from './containers/Layout/Layout';
 import Auth from './containers/Auth/Auth';
 import Test from './containers/Test';
+import Modal from './components/UI/Modal/Modal';
 import Spinner from './components/UI/Spinner/Spinner';
 
 
 class App extends Component {
 
   componentWillMount(){  
-    console.log('App');
     this.props.verifyLogged('billing');
     
     const path = this.props.location.pathname;
@@ -23,17 +23,18 @@ class App extends Component {
 
 
   render() {
-    let renderAuthenticated = <Spinner />;
+    let renderAuthenticated = (
+      <Modal show={true} backdrop={true}>
+        <Spinner />
+      </Modal>
+      );
     
     if(this.props.isAuthenticated){
       renderAuthenticated =(
-        <Layout>
-          <Switch>
-            <Route path="/" exact component={Test} />
-            <Route path="/auth" component={Auth} />
-            <Redirect to="/" />
-          </Switch>
-        </Layout>
+        <Switch>
+          <Route path="/" exact component={Test} />
+          <Redirect to="/" />
+        </Switch>
       )
     }
     else{
@@ -47,7 +48,11 @@ class App extends Component {
       }
     }
 
-    return (renderAuthenticated);
+      return (
+        <Layout>
+          {renderAuthenticated}
+        </Layout>
+      )
   }
 };
 

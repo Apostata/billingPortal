@@ -1,14 +1,18 @@
 import React, {Component, Fragment} from 'react';
+import Header from './Header/Header';
+import Container from '../../components/UI/Container/Container';
 
 class Layout extends Component {
     render(){
         return(
             <Fragment>
-                <div>Cabeçalho</div>
+                <Header />
                 <main>
-                    {this.props.children}
+                    <Container>
+                        {this.props.children}
+                    </Container>
                 </main>
-                <div>Rodapé</div>
+                {/*rodapé?*/}
             </Fragment>
         )
     }

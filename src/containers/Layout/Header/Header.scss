@@ -1,0 +1,16 @@
+@import '../../../sass/base';
+
+.Header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 1px;
+    background: map-get($cores, 'cinza-escuro');
+    margin-bottom: 15px;
+    min-height: 50px;
+
+    .Container{
+        align-items: center;
+    }
+}

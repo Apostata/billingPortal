@@ -1,0 +1,13 @@
+@import '../../../sass/base';
+
+.Container{
+    display: flex;
+    justify-content: flex-start;
+    margin:0 auto;
+
+    @each $device, $screenSize in $sizes {
+        @media screen and ($screenSize){
+            max-width: map-get($container, $device);
+        }
+    }
+}

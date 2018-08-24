@@ -1,15 +1,8 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom'
 import * as actions from '../../store/actions';
-import styles from './Auth.scss';
-import Modal from '../../components/UI/Modal/Modal';
 
 class Auth extends Component{
-    state = {
-        showModal: true
-    }
-
     componentWillMount(){
         if(this.props.isAuthenticated){
             this.props.history.replace('/');
@@ -30,18 +23,6 @@ class Auth extends Component{
         }
     }
 
-    componentDidMount(){
-        console.log('auth component');
-        
-    }
-
-    toggleModal(){
-        this.setState({
-            ...this.state,
-            showModal: !this.state.showModal
-        });
-    }
-
     getToken(code, name){
         this.props.asyncGetToken({name, code})
     }
@@ -58,23 +39,7 @@ class Auth extends Component{
         })
     }
     render(){
-
-        // let renderAuthenticated = (
-        //     <Modal backdrop={true} show={this.state.showModal} clicked={this.toggleModal.bind(this)}>
-        //         <a onClick={(e) => this.chooseOAuthService(e,'billing')} >Billing</a>
-        //     </Modal>
-        // );
-
-        // if(this.props.isAuthenticated){
-        //     renderAuthenticated = <Redirect to={this.props.redirectTo} />;
-        // }
-
-        // return (
-        //     <div className={styles.Auth}>
-        //         {renderAuthenticated}
-        //     </div>
-        // );
-        return(null)
+        return null;
     }
 };
 
