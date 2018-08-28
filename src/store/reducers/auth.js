@@ -5,13 +5,13 @@ const initialState = {
     token: null,
     refreshToken: null,
     message: null,
-    redirectPath: "/"
+    redirectPath: null
 };
 
 const authStart = (state, action) => {
     return {
         ...state,
-        loading:true
+        loading: true
     }
 };
 
@@ -33,8 +33,7 @@ const authSuccess = (state, action) => {
         ...state,
         loading: false,
         token: action.token,
-        refreshToken: action.refreshToken,
-        redirectPath: '/'
+        refreshToken: action.refreshToken
     }
 };
 
@@ -45,6 +44,13 @@ const authError = (state, action) => {
         message: action.error
     }
 };
+
+const redirectTo = (state, action) =>{
+    return {
+        ...state,
+        redirectPath:action.redirectPath
+    }
+}
 
 const reducer = (state = initialState, action) =>{
     switch(action.type){
@@ -59,6 +65,9 @@ const reducer = (state = initialState, action) =>{
         
         case actionTypes.AUTH_LOGOUT:
             return logout(state, action);
+        
+        case actionTypes.AUTH_REDIRECT:
+            return redirectTo(state, action);
 
         default :
             return state;

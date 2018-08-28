@@ -4,69 +4,70 @@ import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as actions from './store/actions';
 import Layout from './containers/Layout/Layout';
-import Auth from './containers/Auth/Auth';
 import Test from './containers/Test';
 import Modal from './components/UI/Modal/Modal';
 import Spinner from './components/UI/Spinner/Spinner';
+import Customers from './containers/Customers/Customers';
 
 
 class App extends Component {
+  
+  componentWillMount(){
+      this.props.verifyLogged('billing', this.props);
+    }
 
-  componentWillMount(){  
-    this.props.verifyLogged('billing');
-    
-    const path = this.props.location.pathname;
-    if(path !== "/auth" && path !=='/'){
-      this.props.redirectAfterLogged(path);
+  componentWillUpdate(nextProps){
+    if(nextProps.redirectPath && nextProps.isAuthenticated && this.props.location.search !== ""){
+        const queryString = this.props.location.search
+        var urlParams = new URLSearchParams(queryString);
+        for (let entry of urlParams.entries()){
+          if(entry[0] === 'code'){
+            this.props.history.replace(nextProps.redirectPath);
+          }
+      }    
     }
   }
 
-
   render() {
-    let renderAuthenticated = (
-      <Modal show={true} backdrop={true}>
-        <Spinner />
-      </Modal>
-      );
-    
-    if(this.props.isAuthenticated){
-      renderAuthenticated =(
-        <Switch>
-          <Route path="/" exact component={Test} />
-          <Redirect to="/" />
-        </Switch>
-      )
+    let renderCompoenent = null;
+
+    if(!this.props.isAuthenticated){
+      if(this.props.isLoading){
+        renderCompoenent = (
+          <Layout>
+            <Spinner />
+          </Layout>
+        )
+      } 
     }
     else{
-      if(!this.props.isLoading){
-        renderAuthenticated =(
+        renderCompoenent = (
+          <Layout>
             <Switch>
-              <Route path="/auth" component={Auth} />
-              <Redirect to="/auth" />
+              <Route path="/" exact component={Test} />
+              <Route path="/customers" component={Customers} />
+              <Redirect to="/" />
             </Switch>
-          );
-      }
+          </Layout>
+        );
     }
 
-      return (
-        <Layout>
-          {renderAuthenticated}
-        </Layout>
-      )
+    return renderCompoenent;
   }
 };
 
 const mapStateToProps = state =>{
   return{
     isAuthenticated: state.auth.token !== null,
-    isLoading: state.auth.loading
+    isLoading: state.auth.loading,
+    redirectPath: state.auth.redirectPath,
   }
 }
 
 const mapDispatchToProps = dispatch =>{
   return {
-    verifyLogged: (name) => dispatch(actions.verifyLogged(name)),
-    redirectAfterLogged: (path) =>dispatch(actions.redirectAfterLogged(path))
+    verifyLogged: (name, props) => dispatch(actions.verifyLogged(name, props)),
+    redirectTo: (path) => dispatch(actions.redirectTo(path))
   }
 }
 

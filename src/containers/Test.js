@@ -3,7 +3,9 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class Test extends Component{
-
+    componentWillMount(){
+        console.log(this.props)
+    }
     render(){
        
         let renderAuthenticated = <p>Teste</p>;

@@ -2,5 +2,5 @@
     "authorizeUrl": "https://gateway-qa-udbp.z1.orbx.uoldiveo.com/oauth2/oauth/authorize",
     "tokenUrl": "https://gateway-qa-udbp.z1.orbx.uoldiveo.com/oauth2/oauth/token",
     "refreshTokenUrl": "https://gateway-qa-udbp.z1.orbx.uoldiveo.com/oauth2/oauth/refresh_token",
-    "redirectUri": "https://localhost:3000/auth"
+    "redirectUri": "https://localhost:3000"
 }

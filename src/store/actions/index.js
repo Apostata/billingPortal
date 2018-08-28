@@ -1,1 +1,1 @@
-export {asyncGetToken, verifyLogged, asyncLogout, redirectAfterLogged} from './auth';
+export {asyncGetToken, verifyLogged, asyncLogout, redirectTo} from './auth';
