@@ -13,8 +13,9 @@ import Customers from './containers/Customers/Customers';
 class App extends Component {
   
   componentWillMount(){
-      this.props.verifyLogged('billing', this.props);
-    }
+    //TODO: todas as rotas que não estiverem no menu.json serão enviada para um component 404
+    this.props.verifyLogged('billing', this.props);
+  }
 
   componentWillUpdate(nextProps){
     if(nextProps.redirectPath && nextProps.isAuthenticated && this.props.location.search !== ""){
@@ -35,7 +36,9 @@ class App extends Component {
       if(this.props.isLoading){
         renderCompoenent = (
           <Layout>
-            <Spinner />
+            <Modal show={true} backdrop={true}>
+              <Spinner />
+            </Modal>
           </Layout>
         )
       } 

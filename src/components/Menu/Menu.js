@@ -11,8 +11,8 @@ const menu = () =>{
     }
     
     return(
-        <div className="" >
-            <ul>
+        <div className={styles.MenuWrapper}>
+            <ul className={styles.Menu}>
                 {getNavitens()}
             </ul>
         </div>
