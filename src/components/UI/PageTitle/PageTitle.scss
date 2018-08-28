@@ -1,0 +1,12 @@
+@import '../../../sass/base';
+
+.PageTitle{
+    font-size: 1.8rem;
+    width: 100%;
+    padding: 0 15px 9px;
+    margin: 40px 0 20px;
+    box-sizing: border-box;
+    font-weight: normal;
+    color: map-get($cores, 'cinza-escuro');
+    border-bottom: 1px solid lighten(map-get($cores, 'cinza-claro'), 10%);
+}

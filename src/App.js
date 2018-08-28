@@ -41,7 +41,7 @@ class App extends Component {
             </Modal>
           </Layout>
         )
-      } 
+      }
     }
     else{
         renderCompoenent = (
@@ -49,6 +49,7 @@ class App extends Component {
             <Switch>
               <Route path="/" exact component={Test} />
               <Route path="/customers" component={Customers} />
+              {/* <Route path="/customers/add" component={Customers} /> */}
               <Redirect to="/" />
             </Switch>
           </Layout>
@@ -69,8 +70,7 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch =>{
   return {
-    verifyLogged: (name, props) => dispatch(actions.verifyLogged(name, props)),
-    redirectTo: (path) => dispatch(actions.redirectTo(path))
+    verifyLogged: (name, props) => dispatch(actions.verifyLogged(name, props))
   }
 }
 

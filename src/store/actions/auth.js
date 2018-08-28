@@ -1,15 +1,10 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import json from '../../json/authRoutes.json';
 
-export const asyncGetToken =(opts) =>{
+const asyncGetToken =(opts) =>{
     return dispatch =>{
-        import(`../../json/${opts.name}`)
-        .then(json=>{
-            dispatch(getToken(json, opts));
-        })
-        .catch(error => {
-            this.props.asyncLogout();
-        });
+        dispatch(getToken(json, opts));
     }
 };
 
@@ -47,7 +42,7 @@ const getToken = (json, opts) =>{
     }
 }
 
-export const asyncLogout = (message=null) =>{
+ const asyncLogout = (message=null) =>{
     return dispatch =>{
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpDate');
@@ -56,7 +51,7 @@ export const asyncLogout = (message=null) =>{
     }
 }
 
-export const redirectTo = (path) =>{
+const redirectTo = (path) =>{
     return {
         type: actionTypes.AUTH_REDIRECT,
         redirectPath: path
@@ -65,13 +60,11 @@ export const redirectTo = (path) =>{
 
 const redirectLogin = (opts) =>{
     return dispatch =>{
-        import(`../../json/${opts.name}`).then(json=>{
-            const url = `${json.authorizeUrl}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${json.redirectUri}${opts.path}&response_type=code`;
-            if(opts.name === "billing"){
-                window.location.href = url;
-                //console.log(url)
-            }    
-        })
+        const url = `${json.authorizeUrl}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${json.redirectUri}${opts.path}&response_type=code`;
+        if(opts.name === "billing"){
+            window.location.href = url;
+            //console.log(url)
+        }    
     }
 }
 
@@ -82,7 +75,7 @@ export const verifyLogged = (name, props) =>{
         const refreshToken = sessionStorage.getItem('refreshtoken');
         const queryString = props.location.search
 
-        if(!token){
+        if(!token){ //se não tem token
             dispatch(asyncLogout());
 
             if(!refreshToken){
@@ -92,7 +85,6 @@ export const verifyLogged = (name, props) =>{
                     dispatch(redirectLogin({name, path: props.location.pathname}));
                 }
                 else{
-                    console.log(queryString);
                     var urlParams = new URLSearchParams(queryString);
                     for (let entry of urlParams.entries()){
                         if(entry[0] === 'code'){
@@ -102,7 +94,7 @@ export const verifyLogged = (name, props) =>{
                 }
             }
         }
-        else{
+        else{ //caso tenho o token no localSorage
             const expiredDate = localStorage.getItem('tokenExpDate');
             
 

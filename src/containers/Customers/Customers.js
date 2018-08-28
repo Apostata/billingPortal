@@ -1,22 +1,45 @@
-import React, {Component} from 'react';
+import React , {Fragment, Component} from 'react';
 import { connect } from 'react-redux';
+import PageTitle from '../../components/UI/PageTitle/PageTitle';
+import * as actions from '../../store/actions'
 
 class Customers extends Component{
-    componentDidMount(){
-        
+    componentWillMount(){
+        this.props.asyncGetCustomers(this.props.token);
     }
+    
+    shouldComponentUpdate(){}
+
     render(){
-       
-        let renderAuthenticated = <p>Customers</p>;
-        return renderAuthenticated;
+        let renderCustomers = ()=>{
+            console.log(this.props.customers);
+
+            if(this.props.customers){
+                this.props.customers.map(customer=>{
+                    return <p>{customer.name}</p>;
+                })
+            }
+        }
+        return(
+            <Fragment>
+                <PageTitle>Customers</PageTitle>
+                {renderCustomers()}
+            </Fragment>
+        );
     }
 };
 
 const mapStateToProps = state =>{
     return {
-        isAuthenticated: state.auth.token !== null,
-        authRedirect: state.auth.authRedirect
-    };
-};
+        token: state.auth.token,
+        customers: state.customers.customers
+    }
+}
 
-export default connect(mapStateToProps, null)(Customers);
+const mapDispatchToProps = dispatch =>{
+    return {
+        asyncGetCustomers: (token) => dispatch(actions.asyncGetCustomers(token))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Customers);
