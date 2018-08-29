@@ -4,11 +4,13 @@ import styles from './TableRow.scss';
 
 const tableRow = (props) =>{
     const renderRow = Object.keys(props).map((column, idx)=>{
-        return (
-            <TableColumn key={idx} id={props.id}>
-                {props[column]}
-            </TableColumn>
-        );
+        if(column !== 'type'){
+            return (
+                <TableColumn type={props.type} key={idx} id={props.id}>
+                    {props[column]}
+                </TableColumn>
+            );
+        }
     });
 
     return(

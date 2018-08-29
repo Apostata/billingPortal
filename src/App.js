@@ -12,7 +12,7 @@ import Customers from './containers/Customers/Customers';
 
 class App extends Component {
   
-  componentWillMount(){
+  componentDidMount(){
     //TODO: todas as rotas que não estiverem no menu.json serão enviada para um component 404
     this.props.verifyLogged('billing', this.props);
   }

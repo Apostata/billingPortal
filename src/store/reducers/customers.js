@@ -2,28 +2,28 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     customers: null,
-    loading: false
+    total: 0,
+    offset: 0,
+    pageSize: 20
 };
 
-const setCustomers = (state, action)=>{
+const getCustomers = (state, action)=>{
     return {
         ...state,
-        customers: action.customers,
-        loading: false
+        customers: action.customers
     }
 }
 
 const customersStart = (state, action)=>{
     return {
-        ...state,
-        loading: true
+        ...state
     }
 }
 
 const reducer = (state = initialState, action) =>{
     switch(action.type){
-        case actionTypes.CUSTOMERS_SET:
-            return setCustomers(state, action);
+        case actionTypes.CUSTOMERS_GET:
+            return getCustomers(state, action);
         
         case actionTypes.CUSTOMERS_START:
             return customersStart(state, action);

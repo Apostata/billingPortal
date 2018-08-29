@@ -26,14 +26,17 @@ const table = (props) =>{
         });                      
        
         const headItens = Object.keys(props.head).map((title, idx)=>{
-            return <th key={idx}>{props.head[title]}</th>
+            return <th key={idx}>{props.head[title]}</th>;
         });
 
         tableHead = (
+            // <thead>
+            //     <tr>
+            //         {headItens}
+            //     </tr>
+            // </thead>
             <thead>
-                <tr>
-                    {headItens}
-                </tr>
+                <TableRow type={'th'} key={1}  {...props.head}  />
             </thead>
         );
     }
@@ -47,7 +50,7 @@ const table = (props) =>{
         const itemId  = item.id ? item.id: idx;
         
         return (
-            <TableRow key={itemId} id={itemId} {...propItem}  />
+            <TableRow type={'td'} key={itemId} id={itemId} {...propItem}  />
         );
     });
 

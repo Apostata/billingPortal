@@ -7,8 +7,14 @@ const AsyncButton = loadAsyncComponent(()=>{
 });
 
 const tableColumn = (props) =>{
-    
-    let renderColumn = <td className={styles.TableColumn} >{props.children}</td>;
+    let renderColumn = null;
+
+    if(props.type ==="th"){
+        renderColumn = <th className={styles.TableColumn} >{props.children}</th>;
+    }
+    else{
+        renderColumn = <td className={styles.TableColumn} >{props.children}</td>;
+    }
 
     if(props.children instanceof Array){
         let buttons = null;
@@ -16,8 +22,12 @@ const tableColumn = (props) =>{
         buttons = props.children.map((action, idx) =>{
             return <AsyncButton key={`${action.name}_${idx}`} click={()=>action.action(props.id)}>{action.name}</AsyncButton>
         }); 
-
-        renderColumn = <td className={styles.TableColumn} >{buttons}</td>
+        if(props.type ==="th"){
+            renderColumn = <th className={styles.TableColumn} >{buttons}</th>
+        }
+        else{
+            renderColumn = <td className={styles.TableColumn} >{buttons}</td>
+        }
     }
     return renderColumn;
 };
