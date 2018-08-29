@@ -7,4 +7,5 @@ export const AUTH_REDIRECT = 'AUTH_REDIRECT';
 
 
 //customers actions
+export const CUSTOMERS_START = 'CUSTOMERS_START';
 export const CUSTOMERS_SET = 'CUSTOMERS_SET';

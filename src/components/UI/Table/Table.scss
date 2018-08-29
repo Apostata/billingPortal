@@ -1,0 +1,9 @@
+.Table{
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+
+    tbody, thead{
+        width: 100%;
+    }
+}

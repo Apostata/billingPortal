@@ -36,8 +36,15 @@ const getToken = (json, opts) =>{
             sessionStorage.setItem('refreshtoken', response.data.refresh_token);
             dispatch(OAuthSuccess(response.data.access_token, response.data.refresh_token, opts.path));
             dispatch(redirectTo(opts.path));
+
         }).catch(error=>{
-            dispatch(OAuthError(error));
+            dispatch(OAuthError(error.error_description));
+            if(error.response.data){
+                if(error.response.data.error_description.indexOf('Invalid refresh token') !== -1){
+                    dispatch(asyncLogout());
+                }
+            }
+            
         });     
     }
 }

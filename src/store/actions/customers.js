@@ -16,6 +16,18 @@ export const asyncGetCustomers = (token) =>{
     }
 }
 
+export const asyncTestCustomers = (id) =>{
+    return dispatch =>{
+        console.log('teste'+ id);
+    }
+}
+
+// const customerStart = () =>{
+//     return{
+//         type: actionTypes.CUSTOMERS_START
+//     }
+// }
+
 const setCustomers = (customers)=>{
     return{
         type: actionTypes.CUSTOMERS_SET,
