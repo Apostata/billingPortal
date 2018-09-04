@@ -1,3 +1,5 @@
+@import '../../../sass/base';
+
 .Table{
     display: flex;
     width: 100%;
@@ -5,5 +7,23 @@
 
     tbody, thead{
         width: 100%;
+
+    }
+
+
+    thead{
+        @media screen and ( map-get($sizes, 'xs')){
+            width: 25%;
+            
+        }
+    }
+
+    tbody{
+        @media screen and ( map-get($sizes, 'xs')){
+            display: flex;
+            overflow: auto;
+            flex-flow: row nowrap;
+            width: 75%; 
+        }
     }
 }

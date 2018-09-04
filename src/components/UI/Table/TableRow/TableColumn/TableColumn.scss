@@ -1,3 +1,41 @@
+@import '../../../../../sass/base';
 .TableColumn{
     flex: 1 1;
+    
+
+    &.id{
+        max-width: 5%;
+        text-align: center;
+        
+    }
+
+    &.name{
+        max-width: 35%;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        max-height: 25px;
+    }
+
+    &.document{
+        max-width: 20%;
+        text-align: center;
+    }
+
+    &.status{
+        max-width: 15%;
+        text-align: center;
+    }
+
+    &.actions{
+        max-width: 25%;
+        text-align: center;
+    }
+
+    @media screen and (map-get($sizes, 'xs')){
+        &.id, &.name, &.document, &.status, &.actions{
+            max-width: 100%;            
+        }
+    }
 }

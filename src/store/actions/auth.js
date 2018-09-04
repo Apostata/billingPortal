@@ -39,7 +39,7 @@ const getToken = (json, opts) =>{
 
         }).catch(error=>{
             dispatch(OAuthError(error.error_description));
-            if(error.response.data){
+            if(error.response){
                 if(error.response.data.error_description.indexOf('Invalid refresh token') !== -1){
                     dispatch(asyncLogout());
                 }

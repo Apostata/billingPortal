@@ -8,6 +8,7 @@ const table = (props) =>{
 
     if(props.head){
         let headArr = Object.keys(props.head);
+        
         props.itens.map(item =>{
             let obj ={};
 
@@ -25,18 +26,10 @@ const table = (props) =>{
             return filteredItens.push(obj);
         });                      
        
-        const headItens = Object.keys(props.head).map((title, idx)=>{
-            return <th key={idx}>{props.head[title]}</th>;
-        });
-
         tableHead = (
-            // <thead>
-            //     <tr>
-            //         {headItens}
-            //     </tr>
-            // </thead>
+            
             <thead>
-                <TableRow type={'th'} key={1}  {...props.head}  />
+                <TableRow classes={styles.TableRow} type={'th'} key={1}  {...props.head}  />
             </thead>
         );
     }
@@ -50,7 +43,7 @@ const table = (props) =>{
         const itemId  = item.id ? item.id: idx;
         
         return (
-            <TableRow type={'td'} key={itemId} id={itemId} {...propItem}  />
+            <TableRow classes={styles.TableRow} type={'td'} key={itemId} id={itemId} {...propItem}  />
         );
     });
 

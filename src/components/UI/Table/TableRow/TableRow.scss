@@ -1,4 +1,15 @@
+@import '../../../../sass/base';
+
 .TableRow{
     width: 100%;
     display: flex;
+
+    @media screen and (map-get($sizes, 'xs')){
+        flex-flow: column nowrap;
+        min-width: 100%;
+    }
+
+    &:nth-child(even){
+        background: lighten(map-get($cores, 'cinza-claro'), 10%);
+    }
 }

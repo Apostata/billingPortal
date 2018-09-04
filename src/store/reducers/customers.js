@@ -10,7 +10,10 @@ const initialState = {
 const getCustomers = (state, action)=>{
     return {
         ...state,
-        customers: action.customers
+        customers: action.customers,
+        offset: action.offset,
+        pageSize: action.pageSize,
+        total: action.total
     }
 }
 

@@ -3,18 +3,28 @@ import TableColumn from './TableColumn/TableColumn';
 import styles from './TableRow.scss';
 
 const tableRow = (props) =>{
-    const renderRow = Object.keys(props).map((column, idx)=>{
-        if(column !== 'type'){
+    let inherithClasses = [];  
+
+    if(props.classes){
+        inherithClasses = props.classes.split(' ');
+    }
+
+    inherithClasses.push(styles.TableRow);
+
+    const renderRow = Object.keys(props).map((column, idx) =>{
+        if(column !== 'type' && column !== 'classes'){
             return (
-                <TableColumn type={props.type} key={idx} id={props.id}>
+                <TableColumn classes={`${column}`} type={props.type} key={idx} id={props.id}>
                     {props[column]}
                 </TableColumn>
             );
+        }else{
+            return null;
         }
     });
 
     return(
-        <tr className={styles.TableRow} id={props.id}> 
+        <tr className={inherithClasses.join(' ')} id={props.id}> 
             {renderRow}
         </tr>
     );
