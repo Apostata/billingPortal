@@ -1,61 +1,40 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Button from '../UI/Button/Button';
+import PageDisplay from './PageDisplay/PageDisplay';
 
-class Pagination extends Component{
-    state ={
-       pages: null
-    }
+const pagination = (props)=>{
+    const   pages = new Array(props.pages).fill(undefined), //precisa ter algo no array
+            currentPage = props.selected + 1, 
+            totalPages = Math.ceil(props.total/props.pageSize);
 
-    componentDidMount(){
-        if(this.props.pages){
+    let pagination = null;
 
-            this.setState({
-                ...this.state,
-                pages: this.props.pages.map((_, idx)=>{
-                    return {id:idx , selected: false}
-                })
+    if(pages){
+        if(pages.length > 0){
+            
+            pages.map((_,idx)=>{
+                pages[idx] = {id:idx, selected:props.selected === idx ? true : false };
             });
-        }
-    }
 
-    setSelected(id){
-        let deselecAll = {
-            ...this.state
-        }
-
-        deselecAll.pages.map(page=>{
-            if(page.id !== id){
-                page.selected = false;
-            }
-            else{
-                page.selected = true;
-            }
-
-        });
-
-       this.setState({
-           ...deselecAll
-       })
-    }
-
-    render(){
-        let pagination = null;
-
-        if(this.state.pages){
-            pagination = this.state.pages.map(page=>{
+            pagination = pages.map(page=>{
                 return (
                 <li key={`pg-${page.id}`}>
-                    <Button selected={page.selected} click={()=>this.setSelected(page.id)}>{page.id + 1}</Button>
+                    <Button disable={props.selected === page.id ? true : false} selected={page.selected} click={()=>props.onChangePage(page.id)}>{page.id + 1}</Button>
                 </li>);
             });
         }
-
-        return (
+    }
+    
+    return (
+        <div className="pagination-wrapper">
+            <PageDisplay current={currentPage} total={totalPages} />
             <ul>
+                <li><Button disable={props.selected === 0 ? true : false} click={()=>props.onChangePage(0)}>Primeira</Button></li>
                 {pagination}
+                <li><Button disable={props.selected === (props.pages - 1) ? true : false} click={()=>props.onChangePage((props.pages - 1))}>Última</Button></li>
             </ul>
-        );
-    }    
+        </div>
+    );
 }
 
-export default Pagination;
+export default pagination;

@@ -9,25 +9,67 @@ import Pagination from '../../components/Pagination/Pagination';
 
 class Customers extends Component{
 
+    state ={
+        selected: null,
+        pages: this.getPages()
+    }
+
+    // shouldComponentUpdate(nextProps, nextState){
+    //     console.log(nextProps, nextState);
+    //     if(this.props.customers || this.state.pages === 0){
+    //         return true;
+    //     }
+
+    //     return false;
+    // }
+
     componentDidMount(){
         this.props.asyncGetCustomers(this.props.token);
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(this.state.pages === 0 && this.props.customers){
+            this.setState({
+                ...this.state,
+                pages: this.getPages(this.props)
+            });
+        }
+    }
+
+    getPages(props = this.props){
+        let {total, pageSize} = props;
+        return Math.ceil(total/pageSize);
+    }
+
+    selectPage(id){
+        let deselecAll = {
+            ...this.state
+        }
+
+        deselecAll.pages.map(page=>{
+            if(page.id !== id){
+                page.selected = false;
+            }
+            else{
+                page.selected = true;
+            }
+
+        });
+
+        this.setState({
+            ...deselecAll
+        });
+
+       this.props.asyncGetCustomers(this.props.token, id);
     }
 
     render(){
         let pagination = null;
         let {total, offset, pageSize} = this.props;
+        const {pages} = this.state;
 
-        if(total > offset){
-           if(offset === 0) offset = 1;
-
-            const pages = new Array(Math.ceil(total/(pageSize * offset))).fill(undefined); //precisa ter algo no array
-
-            pagination = (
-                <div className="pagination">
-                    <Pagination pages={pages}/>
-                </div>
-            )
-        }
+        if(offset < pageSize) offset = 1;
+        const index = Math.floor(offset/pageSize);
 
 
         let rednderCustomers = (
@@ -50,7 +92,20 @@ class Customers extends Component{
                 {name: 'Excluir', classes:'delete', action: this.props.asyncTestCustomers},
                 {name: 'Ativar', classes:'activate', action:  this.props.asyncTestCustomers}
                 
-            ]
+            ];
+
+            if(pages > 0){
+                pagination = (
+                    <Pagination 
+                        total={total}
+                        pageSize={pageSize}
+                        offset={offset} 
+                        selected={index} 
+                        pages = {pages}
+                        onChangePage={(offset)=>this.props.asyncGetCustomers(this.props.token, offset)}
+                    />
+                );
+            }
 
             rednderCustomers = (
                 <Fragment>
@@ -77,7 +132,7 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch =>{
     return {
-        asyncGetCustomers: (token) => dispatch(actions.asyncGetCustomers(token)),
+        asyncGetCustomers: (token, offset) => dispatch(actions.asyncGetCustomers(token, offset)),
         asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id))
     }
 }

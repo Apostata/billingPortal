@@ -39,7 +39,6 @@ export const asyncTestCustomers = (id) =>{
 // }
 
 const getCustomers = (data)=>{
-    console.log(data);
     return{
         type: actionTypes.CUSTOMERS_GET,
         customers : data.content,
