@@ -1,4 +1,4 @@
-import React , {Fragment, Component} from 'react';
+import React , {Component} from 'react';
 import { connect } from 'react-redux';
 import PageTitle from '../../components/UI/PageTitle/PageTitle';
 import * as actions from '../../store/actions'
@@ -6,6 +6,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Table from '../../components/UI/Table/Table';
 import Pagination from '../../components/Pagination/Pagination';
+import styles from './Customers.scss';
 
 class Customers extends Component{
 
@@ -29,6 +30,7 @@ class Customers extends Component{
 
     componentDidUpdate(prevProps, prevState){
         if(this.state.pages === 0 && this.props.customers){
+            
             this.setState({
                 ...this.state,
                 pages: this.getPages(this.props)
@@ -42,22 +44,17 @@ class Customers extends Component{
     }
 
     selectPage(id){
-        let deselecAll = {
+        let deselectAll = {
             ...this.state
         }
 
-        deselecAll.pages.map(page=>{
-            if(page.id !== id){
-                page.selected = false;
-            }
-            else{
-                page.selected = true;
-            }
+        deselectAll.pages.map(page=>{
+            return page.id !== id ? page.selected = false : page.selected = true;
 
         });
 
         this.setState({
-            ...deselecAll
+            ...deselectAll
         });
 
        this.props.asyncGetCustomers(this.props.token, id);
@@ -108,11 +105,11 @@ class Customers extends Component{
             }
 
             rednderCustomers = (
-                <Fragment>
+                <article className={styles.Customers}>
                     <PageTitle>Customers</PageTitle>
                     <Table itens={this.props.customers} head={tableColumns} actions={actions} />
                     {pagination}
-                </Fragment>
+                </article>
             );
         }
 

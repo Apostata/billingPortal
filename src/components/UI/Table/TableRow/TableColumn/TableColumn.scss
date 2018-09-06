@@ -1,7 +1,9 @@
 @import '../../../../../sass/base';
 .TableColumn{
     flex: 1 1;
-    
+    align-self: center;
+    padding: 5px;
+    box-sizing: border-box;
 
     &.id{
         max-width: 5%;

@@ -32,12 +32,6 @@ export const asyncTestCustomers = (id) =>{
     }
 }
 
-// const customerStart = () =>{
-//     return{
-//         type: actionTypes.CUSTOMERS_START
-//     }
-// }
-
 const getCustomers = (data)=>{
     return{
         type: actionTypes.CUSTOMERS_GET,

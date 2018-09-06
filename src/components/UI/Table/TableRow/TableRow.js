@@ -13,12 +13,20 @@ const tableRow = (props) =>{
 
     const renderRow = Object.keys(props).map((column, idx) =>{
         if(column !== 'type' && column !== 'classes'){
+            if(column === "actions"){
+                return (<TableColumn status={props.status} classes={`${column}`} type={props.type} key={idx} id={props.id}>
+                    {props[column]}
+                </TableColumn>
+                );
+            }
+            
             return (
                 <TableColumn classes={`${column}`} type={props.type} key={idx} id={props.id}>
                     {props[column]}
                 </TableColumn>
             );
-        }else{
+        }
+        else{
             return null;
         }
     });

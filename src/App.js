@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import styles from './App.css';
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as actions from './store/actions';
@@ -8,7 +7,6 @@ import Test from './containers/Test';
 import Modal from './components/UI/Modal/Modal';
 import Spinner from './components/UI/Spinner/Spinner';
 import Customers from './containers/Customers/Customers';
-
 
 class App extends Component {
   

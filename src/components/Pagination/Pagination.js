@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../UI/Button/Button';
 import PageDisplay from './PageDisplay/PageDisplay';
+import styles from './Pagination.scss';
 
 const pagination = (props)=>{
     const   pages = new Array(props.pages).fill(undefined), //precisa ter algo no array
@@ -13,7 +14,7 @@ const pagination = (props)=>{
         if(pages.length > 0){
             
             pages.map((_,idx)=>{
-                pages[idx] = {id:idx, selected:props.selected === idx ? true : false };
+               return pages[idx] = {id:idx, selected:props.selected === idx ? true : false };
             });
 
             pagination = pages.map(page=>{
@@ -26,7 +27,7 @@ const pagination = (props)=>{
     }
     
     return (
-        <div className="pagination-wrapper">
+        <div className={styles.Pagination}>
             <PageDisplay current={currentPage} total={totalPages} />
             <ul>
                 <li><Button disable={props.selected === 0 ? true : false} click={()=>props.onChangePage(0)}>Primeira</Button></li>

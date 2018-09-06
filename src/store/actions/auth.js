@@ -119,8 +119,16 @@ export const verifyLogged = (name, props) =>{
                 }
             }
             else{
-                console.log('token ainda ativo, recalcular tempo de expiração');
-                dispatch(OAuthSuccess(token, refreshToken));
+                //TODO verrificar refreshtoken inativo
+                if(new Date(expiredDate).getTime() + 21600000 >= new Date(new Date()).getTime()){
+                    console.log('refresh token expirado, logar!');
+                    dispatch(asyncLogout('Você foi deslogado! Logue novamente!'));
+                    dispatch(redirectLogin({name, path: props.location.pathname}));
+                }
+                else{
+                    console.log('token ainda ativo, recalcular tempo de expiração');
+                    dispatch(OAuthSuccess(token, refreshToken));
+                }
             }
         }
     }   

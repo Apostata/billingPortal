@@ -54,4 +54,8 @@
             background: map-get($cores, 'cinza-claro');
         }
     }
+
+    &:disabled{
+        cursor: default;
+    }
 }

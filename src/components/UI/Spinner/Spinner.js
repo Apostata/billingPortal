@@ -1,6 +1,6 @@
 
 import React from 'react';
-import styles from './Spinner.css';
+import styles from './Spinner.scss';
 const spinner = ()=>{
     return (
         <div className={styles.Spinner}>Loading...</div>
