@@ -25,6 +25,11 @@ class App extends Component {
           }
       }    
     }
+
+    //para verificar caso 
+    if(this.props.isAuthenticated && !nextProps.isAuthenticated){
+      nextProps.verifyLogged('billing', nextProps);
+    }
   }
 
   render() {

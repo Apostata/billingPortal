@@ -3,13 +3,14 @@
 .Button{
     border-radius: 5px;
     margin: 0 5px;
-    padding: 5px 10px;
+    padding: 5px;
     outline: none;
     border: 1px solid;
     box-sizing: border-box;
     box-shadow: 1px 1px 1px 0px map-get($cores, 'cinza-escuro');
     transition: all 300ms ease-in-out 0ms;
     cursor: pointer;
+    
 
     &:active{
         box-shadow: inset 1px 1px 1px 0px map-get($cores, 'cinza-escuro');
@@ -31,7 +32,8 @@
         color: map-get($cores, 'preto');
     
         &:hover{
-            background: map-get($cores, 'cinza-claro');
+            background: map-get($cores, 'cinza-escuro');
+            color: map-get($cores, 'branco');
         }
     }
 

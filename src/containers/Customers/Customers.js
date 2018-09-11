@@ -15,15 +15,6 @@ class Customers extends Component{
         pages: this.getPages()
     }
 
-    // shouldComponentUpdate(nextProps, nextState){
-    //     console.log(nextProps, nextState);
-    //     if(this.props.customers || this.state.pages === 0){
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
-
     componentDidMount(){
         this.props.asyncGetCustomers(this.props.token);
     }

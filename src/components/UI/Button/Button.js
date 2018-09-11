@@ -4,12 +4,19 @@ import FontAwesome from '../FontAwesone/FontAwesome';
 
 const button = (props) =>{
     let classes = [styles.Button];
-    let icon= null;
+    let icon = null;
 
     if(props.classes){
         let inheritedClasses = props.classes.split(' ');
         inheritedClasses.forEach(classe => {
-            classes.push(styles[classe]);
+
+            if(classe.indexOf('Pagination') === -1){
+                classes.push(styles[classe]);
+            }
+            else{
+                console.log(classe)
+                classes.push(classe);
+            }
         });
     }
 
@@ -23,6 +30,13 @@ const button = (props) =>{
         case "Ativar":
             icon = <FontAwesome icon='fa-check' />
             break;
+        case "Primeira":
+            icon = <FontAwesome icon='fa-angle-double-left' />
+            break;
+        case "Última":
+            icon = <FontAwesome icon='fa-angle-double-right' />
+            break;
+
         default:
             icon = null;
             break;
@@ -30,7 +44,7 @@ const button = (props) =>{
 
     return(
         <button disabled={props.disable} className={classes.join(' ')} onClick={()=>props.click()}>
-            {icon} {props.children}
+            {props.children !== "Última" ? icon: null} {props.children} {props.children === "Última" ? icon: null}
         </button>
     )
 };

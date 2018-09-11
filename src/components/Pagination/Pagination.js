@@ -20,7 +20,14 @@ const pagination = (props)=>{
             pagination = pages.map(page=>{
                 return (
                 <li key={`pg-${page.id}`}>
-                    <Button disable={props.selected === page.id ? true : false} selected={page.selected} click={()=>props.onChangePage(page.id)}>{page.id + 1}</Button>
+                    <Button
+                        classes={styles.Button}
+                        disable={props.selected === page.id ? true : false}
+                        selected={page.selected}
+                        click={()=>props.onChangePage(page.id)}
+                    >
+                        {page.id + 1}
+                    </Button>
                 </li>);
             });
         }
@@ -30,9 +37,27 @@ const pagination = (props)=>{
         <div className={styles.Pagination}>
             <PageDisplay current={currentPage} total={totalPages} />
             <ul>
-                <li><Button disable={props.selected === 0 ? true : false} click={()=>props.onChangePage(0)}>Primeira</Button></li>
+                <li>
+                    <Button
+                        classes={`${styles.Button} ${styles.edges}`}
+                        disable={props.selected === 0 ? true : false}
+                        click={()=>props.onChangePage(0)}
+                    >
+                        Primeira
+                    </Button>
+                </li>
+
                 {pagination}
-                <li><Button disable={props.selected === (props.pages - 1) ? true : false} click={()=>props.onChangePage((props.pages - 1))}>Última</Button></li>
+
+                <li>
+                    <Button
+                        classes={`${styles.Button} ${styles.edges}`}
+                        disable={props.selected === (props.pages - 1) ? true : false}
+                        click={()=>props.onChangePage((props.pages - 1))}
+                    >
+                        Última
+                    </Button>
+                </li>
             </ul>
         </div>
     );
