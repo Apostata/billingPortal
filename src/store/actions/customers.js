@@ -15,7 +15,9 @@ export const asyncGetCustomers = (token, page=0, pushHistory = null) =>{
             }
             
         };
-        //const headers = { headers: {Authorization: `Bearer ${token}`}};
+
+        dispatch(startGetCustomer());
+
         axios.get(json.CUSTOMERS, config).then(response=>{
             dispatch(getCustomers(response.data));
             if(pushHistory){
@@ -32,6 +34,12 @@ export const asyncGetCustomers = (token, page=0, pushHistory = null) =>{
 export const asyncTestCustomers = (id) =>{
     return dispatch =>{
         console.log('teste'+ id);
+    }
+}
+
+const startGetCustomer = ()=>{
+    return{
+        type: actionTypes.CUSTOMERS_START
     }
 }
 

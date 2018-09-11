@@ -17,7 +17,6 @@ class Customers extends Component{
     }
 
     componentDidMount(){
-        console.log(this.props)
         const page = this.getParamPage();        
         this.props.asyncGetCustomers(this.props.token, page, this.props.history);
     }
@@ -57,18 +56,18 @@ class Customers extends Component{
 
     render(){
         let pagination = null;
-        let {total, offset, pageSize} = this.props;
+        let {total, offset, pageSize, loading} = this.props;
         const {numPages} = this.state;
-
         if(offset < pageSize) offset = 1;
         const index = Math.floor(offset/pageSize);
 
-
-        let rednderCustomers = (
+        const modal = (
             <Modal show={true} backdrop={true}>
                 <Spinner />
             </Modal>
         );
+
+        let renderCustomers = modal;
 
         if(this.props.customers){
             const tableColumns ={
@@ -100,16 +99,22 @@ class Customers extends Component{
                 );
             }
 
-            rednderCustomers = (
+            renderCustomers = (
                 <article className={styles.Customers}>
                     <PageTitle>Customers</PageTitle>
-                    <Table itens={this.props.customers} head={tableColumns} actions={actions} />
+                    {!loading ?
+                        <Table
+                        itens={this.props.customers}
+                        head={tableColumns}
+                        actions={actions}
+                    />
+                    : modal}
                     {pagination}
                 </article>
             );
         }
 
-        return rednderCustomers;
+        return renderCustomers;
     }
 };
 
@@ -120,6 +125,7 @@ const mapStateToProps = state =>{
         total: state.customers.total,
         offset: state.customers.offset,
         pageSize: state.customers.pageSize,
+        loading: state.customers.loading,
     }
 }
 

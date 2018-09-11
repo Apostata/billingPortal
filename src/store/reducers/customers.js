@@ -4,7 +4,8 @@ const initialState = {
     customers: null,
     total: 0,
     offset: 0,
-    pageSize: 20
+    pageSize: 20,
+    loading: false
 };
 
 const getCustomers = (state, action)=>{
@@ -13,13 +14,15 @@ const getCustomers = (state, action)=>{
         customers: action.customers,
         offset: action.offset,
         pageSize: action.pageSize,
-        total: action.total
+        total: action.total,
+        loading: false
     }
 }
 
 const customersStart = (state, action)=>{
     return {
-        ...state
+        ...state,
+        loading:true,
     }
 }
 
