@@ -14,7 +14,6 @@ const button = (props) =>{
                 classes.push(styles[classe]);
             }
             else{
-                console.log(classe)
                 classes.push(classe);
             }
         });

@@ -3,12 +3,12 @@ import axios from 'axios';
 import json from '../../json/customersRoutes.json';
 
 
-export const asyncGetCustomers = (token, offset=0) =>{
+export const asyncGetCustomers = (token, page=0, pushHistory = null) =>{
     return dispatch =>{
-        //TODO: passar os parametros de offset
+        //TODO: passar os parametros de page
         const config = {
             params:{
-                page: offset
+                page
             },
             headers:{
                 Authorization: `Bearer ${token}`
@@ -18,6 +18,9 @@ export const asyncGetCustomers = (token, offset=0) =>{
         //const headers = { headers: {Authorization: `Bearer ${token}`}};
         axios.get(json.CUSTOMERS, config).then(response=>{
             dispatch(getCustomers(response.data));
+            if(pushHistory){
+                pushHistory.push(`/customers/${page+1}`);
+            }
         })
         .catch(error=>{
             console.log(error);

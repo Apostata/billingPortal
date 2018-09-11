@@ -12,21 +12,41 @@ class Customers extends Component{
 
     state ={
         selected: null,
-        pages: this.getPages()
+        numPages: this.getPages(),
+        page: this.props.offset <= 1 ? 0 :  Math.ceil(this.props.offset/20)
     }
 
     componentDidMount(){
-        this.props.asyncGetCustomers(this.props.token);
+        console.log(this.props)
+        const page = this.getParamPage();        
+        this.props.asyncGetCustomers(this.props.token, page, this.props.history);
     }
 
     componentDidUpdate(prevProps, prevState){
-        if(this.state.pages === 0 && this.props.customers){
-            
+        const {customers, token} = this.props;
+        const {page, numPages} = this.state;
+
+        if(numPages === 0 && customers){
             this.setState({
                 ...this.state,
-                pages: this.getPages(this.props)
+                numPages: this.getPages(this.props)
             });
         }
+
+        if(prevState.page !== page){
+            this.props.asyncGetCustomers(token, (page-1), this.props.history);
+        }
+    }
+
+    getParamPage(){
+        const paramPage = this.props.match.params.page;
+        let page = 0;
+
+        if(paramPage){
+            paramPage > 1? page = (paramPage - 1): page = 0;
+        }
+
+        return page;
     }
 
     getPages(props = this.props){
@@ -34,27 +54,11 @@ class Customers extends Component{
         return Math.ceil(total/pageSize);
     }
 
-    selectPage(id){
-        let deselectAll = {
-            ...this.state
-        }
-
-        deselectAll.pages.map(page=>{
-            return page.id !== id ? page.selected = false : page.selected = true;
-
-        });
-
-        this.setState({
-            ...deselectAll
-        });
-
-       this.props.asyncGetCustomers(this.props.token, id);
-    }
 
     render(){
         let pagination = null;
         let {total, offset, pageSize} = this.props;
-        const {pages} = this.state;
+        const {numPages} = this.state;
 
         if(offset < pageSize) offset = 1;
         const index = Math.floor(offset/pageSize);
@@ -82,15 +86,16 @@ class Customers extends Component{
                 
             ];
 
-            if(pages > 0){
+            if(numPages > 0){
                 pagination = (
                     <Pagination 
                         total={total}
                         pageSize={pageSize}
                         offset={offset} 
                         selected={index} 
-                        pages = {pages}
-                        onChangePage={(offset)=>this.props.asyncGetCustomers(this.props.token, offset)}
+                        pages = {numPages}
+                        //onChangePage={(offset)=>this.props.asyncGetCustomers(this.props.token, offset)}
+                        onChangePage={(index)=>this.setState({...this.state, page: index+1})}
                     />
                 );
             }
@@ -120,7 +125,7 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch =>{
     return {
-        asyncGetCustomers: (token, offset) => dispatch(actions.asyncGetCustomers(token, offset)),
+        asyncGetCustomers: (token, page, pushHistory) => dispatch(actions.asyncGetCustomers(token, page, pushHistory)),
         asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id))
     }
 }
