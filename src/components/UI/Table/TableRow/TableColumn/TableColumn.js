@@ -1,10 +1,7 @@
 import React from 'react';
-import loadAsyncComponent from '../../../../../hoc/asyncImportComponent';
+//import loadAsyncComponent from '../../../../../hoc/asyncImportComponent';
 import styles from './TableColumn.scss';
-
-const AsyncButton = loadAsyncComponent(()=>{
-    return import('../../../Button/Button')
-});
+import Button from '../../../Button/Button';
 
 const tableColumn = (props) =>{
     let classes = [];
@@ -31,7 +28,7 @@ const tableColumn = (props) =>{
         let buttons = null;
 
         buttons = props.children.map((action, idx) =>{
-            return <AsyncButton classes={action.classes} key={`${action.name}_${idx}`} click={()=>action.action(props.id)}>{action.name}</AsyncButton>
+            return <Button classes={action.classes} key={`${action.name}_${idx}`} click={()=>action.action(props.id)}>{action.name}</Button>
         }); 
         if(props.type ==="th"){
             renderColumn = <th className={classes.join(' ')} >{buttons}</th>

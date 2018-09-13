@@ -30,15 +30,20 @@ const getToken = (json, opts) =>{
         .then(response=>{
             const tokenExpirationTime = response.data.expires_in;
             const tokenExpirationDate = new Date(new Date().getTime() + tokenExpirationTime);
+            const refreshTokenExpirationDate = new Date(new Date().getTime() + 30000000);
             
             localStorage.setItem('token', response.data.access_token);
             localStorage.setItem('tokenExpDate', tokenExpirationDate);
             sessionStorage.setItem('refreshtoken', response.data.refresh_token);
+            if(opts.type !== 'refresh_token'){
+                sessionStorage.setItem('refreshTokenExpDate', refreshTokenExpirationDate);
+            }
             dispatch(OAuthSuccess(response.data.access_token, response.data.refresh_token, opts.path));
             dispatch(redirectTo(opts.path));
 
         }).catch(error=>{
-            dispatch(OAuthError(error.error_description));            
+            dispatch(OAuthError(error.error_description));
+            dispatch(asyncLogout());            
         });     
     }
 }
@@ -48,6 +53,7 @@ const getToken = (json, opts) =>{
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpDate');
         sessionStorage.removeItem('refreshtoken');
+        sessionStorage.removeItem('refreshTokenExpDate');
         dispatch(OAuthLogout(message));
     }
 }
@@ -81,7 +87,7 @@ export const verifyLogged = (name, props) =>{
 
             if(!refreshToken){
                 if(!queryString){
-                    console.log('não possui token ou refresh token, logar!');
+                    console.log('não possui token ou refresh token, nem querystring , logar!');
                     
                     dispatch(redirectLogin({name, path: props.location.pathname}));
                 }
@@ -98,32 +104,34 @@ export const verifyLogged = (name, props) =>{
         else{ //caso tenho o token no localSorage
             const expiredDate = localStorage.getItem('tokenExpDate') || null;
 
-            //refresh token expirado 
-            if(expiredDate && new Date(expiredDate).getTime() + 21600000 <= new Date(new Date()).getTime()){
-                console.log('refresh token expirado, logar!');
-                dispatch(asyncLogout());
-                dispatch(redirectLogin({name, path: props.location.pathname}));
-            }
-            else{
+            //token expirado 
+            if(new Date(expiredDate).getTime() <= new Date(new Date()).getTime()){
+                console.log('token expirado, usar refresh token para pegar um novo');
 
-                if(new Date(expiredDate).getTime() <= new Date(new Date()).getTime()){
-                    console.log('token expirado, usar refresh token para pegar um novo');
-                    
-                    if(!refreshToken){
-                        console.log('possui token mas não refresh token, logar!');
+                if(!refreshToken){
+                    console.log('possui token mas não refresh token, logar!');
+                    dispatch(asyncLogout());
+                    dispatch(redirectLogin({name, path: props.location.pathname}));
+                }
+                
+                else{
+                    const refreshExpiredDate = sessionStorage.getItem('refreshTokenExpDate') || null;
+                    console.log(expiredDate, refreshExpiredDate)
+                    //refreshtoken expirado
+                    if(new Date(refreshExpiredDate).getTime() <= new Date(new Date()).getTime()){
+                        console.log('Refreshtoken expirado');
                         dispatch(asyncLogout());
                         dispatch(redirectLogin({name, path: props.location.pathname}));
                     }
-                    
                     else{
-                        console.log('getting Refresh token');
+                        console.log('pegar token usando refreshtoken');
                         dispatch(asyncGetToken({name, code: refreshToken, type:'refresh_token', path: props.location.pathname}));
                     }
                 }
-                else{
-                    console.log('token ainda ativo!');
-                    dispatch(OAuthSuccess(token, refreshToken));
-                }
+            }
+            else{
+                console.log('token ainda ativo!');
+                dispatch(OAuthSuccess(token, refreshToken));
             }
         }
     }   

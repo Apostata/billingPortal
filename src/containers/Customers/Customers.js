@@ -17,12 +17,13 @@ class Customers extends Component{
     }
 
     componentDidMount(){
+        this.mounted = true;
         const page = this.getParamPage();        
         this.props.asyncGetCustomers(this.props.token, page, this.props.history);
     }
 
     componentDidUpdate(prevProps, prevState){
-        const {customers, token} = this.props;
+        const {customers, token, history} = this.props;
         const {page, numPages} = this.state;
 
         if(numPages === 0 && customers){
@@ -33,7 +34,7 @@ class Customers extends Component{
         }
 
         if(prevState.page !== page){
-            this.props.asyncGetCustomers(token, (page-1), this.props.history);
+            this.props.asyncGetCustomers(token, (page-1), history);
         }
     }
 

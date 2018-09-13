@@ -15,20 +15,20 @@ class App extends Component {
     this.props.verifyLogged('billing', this.props);
   }
 
-  componentWillUpdate(nextProps){
-    if(nextProps.redirectPath && nextProps.isAuthenticated && this.props.location.search !== ""){
-        const queryString = this.props.location.search
+  componentDidUpdate(prevProps){
+    if(this.props.redirectPath && this.props.isAuthenticated && prevProps.location.search !== ""){
+        const queryString = prevProps.location.search
         var urlParams = new URLSearchParams(queryString);
         for (let entry of urlParams.entries()){
           if(entry[0] === 'code'){
-            this.props.history.replace(nextProps.redirectPath);
+            prevProps.history.replace(this.props.redirectPath);
           }
       }    
     }
 
     //para verificar caso 
-    if(this.props.isAuthenticated && !nextProps.isAuthenticated){
-      nextProps.verifyLogged('billing', nextProps);
+    if(prevProps.isAuthenticated && !this.props.isAuthenticated){
+      this.props.verifyLogged('billing', this.props);
     }
   }
 
