@@ -1,51 +1,63 @@
 import * as actionTypes from './actionTypes';
-import axios from 'axios';
-import json from '../../json/customersRoutes.json';
-
 
 export const asyncGetCustomers = (token, page=0, pushHistory = null) =>{
-    return dispatch =>{
-        //TODO: passar os parametros de page
-        const config = {
-            params:{
-                page
-            },
-            headers:{
-                Authorization: `Bearer ${token}`
-            }
-            
-        };
+    return{
+        type: actionTypes.SAGA_FETCH_CUSTOMERS,
+        token: token,
+        page:page,
+        pushHistory: pushHistory
+    };
+}
 
-        dispatch(startGetCustomer());
-
-        axios.get(json.CUSTOMERS, config).then(response=>{
-            dispatch(getCustomers(response.data));
-            if(pushHistory){
-                pushHistory.push(`/customers/${page+1}`);
-            }
-        })
-        .catch(error=>{
-            console.log(error);
-            dispatch(getCustomers(null));
-        })
+export const editCustomer = (customer, pushHistory) =>{
+    return{
+        type: actionTypes.SAGA_EDIT_CUSTOMER,
+        pushHistory,
+        customer
     }
 }
 
+export const setSelectedCustomer = (customer) => {
+    return{
+        type: actionTypes.CUSTOMER_SET_SELECTED,
+        selectedCustomer: customer
+    };
+};
+
+//TODO criar uma action para cada botão de ação de customers 
 export const asyncTestCustomers = (id) =>{
     return dispatch =>{
         console.log('teste'+ id);
     }
 }
 
-const startGetCustomer = ()=>{
+export const removeCustomers = (id) =>{
+    return dispatch =>{
+        console.log('teste'+ id);
+    }
+}
+
+export const activeToggleCustomer = (id, status) =>{
+    return dispatch =>{
+        console.log('teste'+ id);
+    }
+}
+
+export const startGetCustomer = ()=>{
     return{
         type: actionTypes.CUSTOMERS_START
     }
 }
 
-const getCustomers = (data)=>{
+export const errorGetCustomer = ()=>{
     return{
-        type: actionTypes.CUSTOMERS_GET,
+        type: actionTypes.CUSTOMERS_ERROR
+    }
+}
+
+export const successGetCustomers = (data)=>{
+    return{
+        type: actionTypes.CUSTOMERS_FETCH_SUCCESS,
         customers : data.content,
         offset: data.pageable.offset,
         total: data.totalElements,

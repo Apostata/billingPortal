@@ -55,6 +55,14 @@ class Customers extends Component{
     }
 
 
+    getCurrentCustomer(id){
+        const customer = [
+            ...this.props.customers.filter(singleCustomer => singleCustomer.id === id)
+        ];
+        this.props.editCustomer(customer[0], this.props.history);
+
+    }
+
     render(){
         let pagination = null;
         let {total, offset, pageSize, loading} = this.props;
@@ -80,9 +88,9 @@ class Customers extends Component{
             };
 
             const actions = [
-                {name: 'Editar', classes:'edit', action: this.props.asyncTestCustomers},
+                {name: 'Editar', classes:'edit', action: this.getCurrentCustomer.bind(this)},
                 {name: 'Excluir', classes:'delete', action: this.props.asyncTestCustomers},
-                {name: 'Ativar', classes:'activate', action:  this.props.asyncTestCustomers}
+                {name: {"ACTIVE":"Desativar","INACTIVE":""}, classes:'activate', action: this.props.asyncTestCustomers}
                 
             ];
 
@@ -127,13 +135,15 @@ const mapStateToProps = state =>{
         offset: state.customers.offset,
         pageSize: state.customers.pageSize,
         loading: state.customers.loading,
+        selectedCustomer: state.customers.selectedCustomer,
     }
 }
 
 const mapDispatchToProps = dispatch =>{
     return {
         asyncGetCustomers: (token, page, pushHistory) => dispatch(actions.asyncGetCustomers(token, page, pushHistory)),
-        asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id))
+        asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id)),
+        editCustomer:(customer, pushHistory) => dispatch(actions.editCustomer(customer, pushHistory))
     }
 }
 

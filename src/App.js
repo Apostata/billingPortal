@@ -51,6 +51,7 @@ class App extends Component {
           <Layout>
             <Switch>
               <Route path="/" exact component={Test} />
+              <Route path="/customers/edit/:id" component={Test} />
               <Route path="/customers/:page" component={Customers} />
               <Route path="/customers" component={Customers} />
               {/* <Route path="/customers/add" component={Customers} /> */}

@@ -5,10 +5,11 @@ const initialState = {
     total: 0,
     offset: 0,
     pageSize: 20,
-    loading: false
+    loading: false,
+    selectedCustomer: null
 };
 
-const getCustomers = (state, action)=>{
+const fetchCustomers = (state, action)=>{
     return {
         ...state,
         customers: action.customers,
@@ -24,15 +25,25 @@ const customersStart = (state, action)=>{
         ...state,
         loading:true,
     }
+};
+
+const selectCustomer = (state, action)=>{
+    return{
+        ...state,
+        selectedCustomer: action.selectedCustomer
+    }
 }
 
 const reducer = (state = initialState, action) =>{
     switch(action.type){
-        case actionTypes.CUSTOMERS_GET:
-            return getCustomers(state, action);
+        case actionTypes.CUSTOMERS_FETCH_SUCCESS:
+            return fetchCustomers(state, action);
         
         case actionTypes.CUSTOMERS_START:
             return customersStart(state, action);
+
+        case actionTypes.CUSTOMER_SET_SELECTED:
+            return selectCustomer(state, action);
 
         default :
             return state;

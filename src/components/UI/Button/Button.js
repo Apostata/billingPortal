@@ -29,6 +29,9 @@ const button = (props) =>{
         case "Ativar":
             icon = <FontAwesome icon='fa-check' />
             break;
+        case "Desativar":
+            icon = <FontAwesome icon='fa-times' />
+            break;
         case "Primeira":
             icon = <FontAwesome icon='fa-angle-double-left' />
             break;
