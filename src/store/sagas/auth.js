@@ -56,13 +56,12 @@ export function* sagaLogout(action){
 export function* sagaRedirectLogin(action){
     const url = `${json.authorizeUrl}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${json.redirectUri}${action.opts.path}&response_type=code`;
     if(action.opts.name === "billing"){
-        window.location.href = url;
+        yield window.location.href = url;
         //console.log(url)
     }    
 };
 
 export function* sagaVerifyLogged(action){
-
     const token = yield localStorage.getItem('token'); 
     const refreshToken = yield sessionStorage.getItem('refreshtoken');
     const queryString = yield action.props.location.search
