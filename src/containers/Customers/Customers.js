@@ -6,6 +6,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Table from '../../components/UI/Table/Table';
 import Pagination from '../../components/Pagination/Pagination';
+import Button from '../../components/UI/Button/Button';
 import styles from './Customers.scss';
 
 class Customers extends Component{
@@ -55,12 +56,14 @@ class Customers extends Component{
     }
 
 
-    getCurrentCustomer(id){
-        const customer = [
-            ...this.props.customers.filter(singleCustomer => singleCustomer.id === id)
-        ];
-        this.props.editCustomer(customer[0], this.props.history);
+    addNewCustomer(){
+        const {history} = this.props;
+        this.props.addCustomer(history)
+    }
 
+    editCustomer(id){
+        const customer = this.props.customers.filter(singleCustomer => singleCustomer.id === id)
+        this.props.editCustomer(customer[0], this.props.history);
     }
 
     render(){
@@ -69,6 +72,13 @@ class Customers extends Component{
         const {numPages} = this.state;
         if(offset < pageSize) offset = 1;
         const index = Math.floor(offset/pageSize);
+
+
+        const addButtonLine = (
+            <div className={[styles.ButtonLine, styles.alignRight].join(' ')}>
+                <Button classes="add" click={this.addNewCustomer.bind(this)}>Adicionar</Button>
+            </div>
+        );
 
         const modal = (
             <Modal show={true} backdrop={true}>
@@ -88,7 +98,7 @@ class Customers extends Component{
             };
 
             const actions = [
-                {name: 'Editar', classes:'edit', action: this.getCurrentCustomer.bind(this)},
+                {name: 'Editar', classes:'edit', action: this.editCustomer.bind(this)},
                 {name: 'Excluir', classes:'delete', action: this.props.asyncTestCustomers},
                 {name: {"ACTIVE":"Desativar","INACTIVE":""}, classes:'activate', action: this.props.asyncTestCustomers}
                 
@@ -111,6 +121,9 @@ class Customers extends Component{
             renderCustomers = (
                 <article className={styles.Customers}>
                     <PageTitle>Customers</PageTitle>
+
+                    {addButtonLine}
+
                     {!loading ?
                         <Table
                         itens={this.props.customers}
@@ -118,6 +131,7 @@ class Customers extends Component{
                         actions={actions}
                     />
                     : modal}
+
                     {pagination}
                 </article>
             );
@@ -143,7 +157,8 @@ const mapDispatchToProps = dispatch =>{
     return {
         asyncGetCustomers: (token, page, pushHistory) => dispatch(actions.asyncGetCustomers(token, page, pushHistory)),
         asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id)),
-        editCustomer:(customer, pushHistory) => dispatch(actions.editCustomer(customer, pushHistory))
+        editCustomer:(customer, pushHistory) => dispatch(actions.editCustomer(customer, pushHistory)),
+        addCustomer:(pushHistory) => dispatch(actions.addCustomer(pushHistory))
     }
 }
 

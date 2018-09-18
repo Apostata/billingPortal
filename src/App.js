@@ -6,7 +6,9 @@ import Layout from './containers/Layout/Layout';
 import Test from './containers/Test';
 import Modal from './components/UI/Modal/Modal';
 import Spinner from './components/UI/Spinner/Spinner';
+
 import Customers from './containers/Customers/Customers';
+import AddEditCustomer from './containers/Customers/AddEditCustomer/AddEditCustomer';
 
 class App extends Component {
   
@@ -51,8 +53,8 @@ class App extends Component {
           <Layout>
             <Switch>
               <Route path="/" exact component={Test} />
-              <Route path="/customers/edit/:id" component={Test} />
-              <Route path="/customers/add" component={Test} />
+              <Route path="/customers/add" component={AddEditCustomer} />
+              <Route path="/customers/edit/:id" component={AddEditCustomer} />
               <Route path="/customers/:page" component={Customers} />
               <Route path="/customers" component={Customers} />
               <Redirect to="/" />

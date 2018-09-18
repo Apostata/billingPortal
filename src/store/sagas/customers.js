@@ -40,7 +40,9 @@ export function* sagaGetCustomers(action){
 };
 
 export function* sagaEditCustomer(action){
-    console.log(action);
-    yield put(actions.setSelectedCustomer(action.customer));
     yield action.pushHistory.push(`/customers/edit/${action.customer.id}`);
+}
+
+export function* sagaAddCustomer(action){
+    yield action.pushHistory.push(`/customers/add`);
 }

@@ -38,6 +38,9 @@ const button = (props) =>{
         case "Última":
             icon = <FontAwesome icon='fa-angle-double-right' />
             break;
+        case "Adicionar":
+            icon = <FontAwesome icon='fa-plus' />
+            break;
 
         default:
             icon = null;

@@ -3,3 +3,12 @@
 .Customers{
 
 }
+
+.ButtonLine{
+    display: flex;
+    align-items: flex-end;
+
+    &.alignRight{
+        justify-content: flex-end;
+    }
+}

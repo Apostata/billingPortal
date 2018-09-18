@@ -19,5 +19,6 @@ export {
     successGetCustomers,
     errorGetCustomer,
     setSelectedCustomer,
-    editCustomer
+    editCustomer,
+    addCustomer
  } from './customers';

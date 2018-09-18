@@ -17,6 +17,13 @@ export const editCustomer = (customer, pushHistory) =>{
     }
 }
 
+export const addCustomer = (pushHistory) =>{
+    return{
+        type: actionTypes.SAGA_ADD_CUSTOMER,
+        pushHistory
+    }
+}
+
 export const setSelectedCustomer = (customer) => {
     return{
         type: actionTypes.CUSTOMER_SET_SELECTED,

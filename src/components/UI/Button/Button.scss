@@ -26,6 +26,17 @@
         }
     }
 
+    &.add{
+        border-color: map-get($cores, 'cinza-medio');
+        background: map-get($cores, 'branco');
+        color: map-get($cores, 'preto');
+    
+        &:hover{
+            background: map-get($cores, 'cinza-escuro');
+            color: map-get($cores, 'branco');
+        }
+    }
+
     &.edit{
         border-color: map-get($cores, 'cinza-medio');
         background: map-get($cores, 'branco');

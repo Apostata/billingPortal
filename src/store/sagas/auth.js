@@ -1,4 +1,4 @@
-import {put} from 'redux-saga/effects';
+import {put, all} from 'redux-saga/effects';
 import axios from 'axios';
 import * as actions from '../actions';
 import json from '../../json/authRoutes.json';
@@ -20,36 +20,43 @@ export function* sagaGetToken(action){
     };
     try{
         const response = yield axios.post(url, data, config);
-        
         const tokenExpirationTime = yield response.data.expires_in;
         const tokenExpirationDate = yield new Date(new Date().getTime() + tokenExpirationTime);
         const refreshTokenExpirationDate = yield new Date(new Date().getTime() + 30000000);
         
-        yield localStorage.setItem('token', response.data.access_token);
-        yield localStorage.setItem('tokenExpDate', tokenExpirationDate);
-        yield sessionStorage.setItem('refreshtoken', response.data.refresh_token);
+        yield all([
+            localStorage.setItem('token', response.data.access_token),
+            localStorage.setItem('tokenExpDate', tokenExpirationDate),
+            sessionStorage.setItem('refreshtoken', response.data.refresh_token)
+        ]);
         
         if(action.opts.type !== 'refresh_token'){
             yield sessionStorage.setItem('refreshTokenExpDate', refreshTokenExpirationDate);
         }
 
-        yield put(actions.OAuthSuccess(response.data.access_token, response.data.refresh_token, action.opts.path));
-        yield put(actions.redirectTo(action.opts.path));
+        yield all([
+            put(actions.OAuthSuccess(response.data.access_token, response.data.refresh_token, action.opts.path)),
+            put(actions.redirectTo(action.opts.path))
+        ]);
     }
     catch(error){
-        yield put(actions.OAuthError(error.error_description));
-        yield put(actions.asyncLogout()); 
+        yield all([
+            put(actions.OAuthError(error.error_description)),
+            put(actions.asyncLogout())
+        ]);
     }
 
 };
 
 
 export function* sagaLogout(action){
-    yield localStorage.removeItem('token');
-    yield localStorage.removeItem('tokenExpDate');
-    yield sessionStorage.removeItem('refreshtoken');
-    yield sessionStorage.removeItem('refreshTokenExpDate');
-    yield put(actions.OAuthLogout(action.message));
+    yield all([
+        localStorage.removeItem('token'),
+        localStorage.removeItem('tokenExpDate'),
+        sessionStorage.removeItem('refreshtoken'),
+        sessionStorage.removeItem('refreshTokenExpDate'),
+        put(actions.OAuthLogout(action.message))
+    ]);
 };
 
 
