@@ -46,3 +46,13 @@ export function* sagaEditCustomer(action){
 export function* sagaAddCustomer(action){
     yield action.pushHistory.push(`/customers/add`);
 }
+
+export function* sagaActivateCustomer(action){
+    const config = yield {
+        headers:{
+            Authorization: `Bearer ${action.token}`
+        }
+        
+    };
+    axios.put(`${json.CUSTOMERS}/${action.id}/${action.status}`, null, config)
+}
