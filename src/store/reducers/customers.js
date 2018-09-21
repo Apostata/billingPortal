@@ -34,6 +34,20 @@ const selectCustomer = (state, action)=>{
     }
 }
 
+const customerEdit = (state, action)=>{
+    const newCustomers = state.customers.map(customer=>{
+        if(customer.id === action.customer.id){
+            return action.customer;
+        }
+        return customer;
+    });
+    
+    return {
+        ...state,
+        customers:newCustomers
+    }
+};
+
 const reducer = (state = initialState, action) =>{
     switch(action.type){
         case actionTypes.CUSTOMERS_FETCH_SUCCESS:
@@ -44,6 +58,9 @@ const reducer = (state = initialState, action) =>{
 
         case actionTypes.CUSTOMER_SET_SELECTED:
             return selectCustomer(state, action);
+
+        case actionTypes.CUSTOMER_EDIT:
+            return customerEdit(state, action);
 
         default :
             return state;

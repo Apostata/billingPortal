@@ -19,8 +19,10 @@ class Customers extends Component{
 
     componentDidMount(){
         this.mounted = true;
-        const page = this.getParamPage();        
-        this.props.asyncGetCustomers(this.props.token, page, this.props.history);
+        const page = this.getParamPage();
+        if(!this.props.customers){        
+            this.props.asyncGetCustomers(this.props.token, page, this.props.history);
+        }
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -58,12 +60,18 @@ class Customers extends Component{
 
     addNewCustomer(){
         const {history} = this.props;
-        this.props.addCustomer(history)
+        this.props.navigateToAddCustomer(history)
     }
 
     editCustomer(id){
-        const customer = this.props.customers.filter(singleCustomer => singleCustomer.id === id)
-        this.props.editCustomer(customer[0], this.props.history);
+        const {history} = this.props;
+        this.props.navigateToEditCustomer(id, history);
+    }
+
+    toggleActiveCustomer(id, status){
+        const {token, customers} = this.props;
+        const {page} = this.state;
+        this.props.toggleActivateCustomer(token, id, status, page, customers);
     }
 
     render(){
@@ -98,9 +106,21 @@ class Customers extends Component{
             };
 
             const actions = [
-                {name: 'Editar', classes:'edit', action: this.editCustomer.bind(this)},
-                {name: 'Excluir', classes:'delete', action: this.props.asyncTestCustomers},
-                {name: {"ACTIVE":"Desativar","INACTIVE":""}, classes:'activate', action: this.props.asyncTestCustomers}
+                {
+                    name: 'Editar',
+                    classes:'edit',
+                    action: this.editCustomer.bind(this)
+                },
+                {
+                    name: 'Excluir', 
+                    classes:'delete',
+                    action: ()=>{console.log('teste')}
+                },
+                {
+                    name: {"ACTIVE":"Desativar","INACTIVE":"Ativar"},
+                    classes:'activate', 
+                    action: this.toggleActiveCustomer.bind(this)
+                }
                 
             ];
 
@@ -155,10 +175,11 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch =>{
     return {
-        asyncGetCustomers: (token, page, pushHistory) => dispatch(actions.asyncGetCustomers(token, page, pushHistory)),
+        asyncGetCustomers: (token, page, pushHistory, customers) => dispatch(actions.asyncGetCustomers(token, page, pushHistory, customers)),
         asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id)),
-        editCustomer:(customer, pushHistory) => dispatch(actions.editCustomer(customer, pushHistory)),
-        addCustomer:(pushHistory) => dispatch(actions.addCustomer(pushHistory))
+        navigateToEditCustomer:(id, pushHistory) => dispatch(actions.navigateToEditCustomer(id, pushHistory)),
+        navigateToAddCustomer:(pushHistory) => dispatch(actions.navigateToAddCustomer(pushHistory)),
+        toggleActivateCustomer:(token, id, status, page, customers)=>dispatch(actions.toggleActivateCustomer(token, id, status, page, customers))
     }
 }
 

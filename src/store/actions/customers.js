@@ -9,15 +9,23 @@ export const asyncGetCustomers = (token, page=0, pushHistory = null) =>{
     };
 }
 
-export const editCustomer = (customer, pushHistory) =>{
+export const navigateToEditCustomer = (id, pushHistory) =>{
     return{
         type: actionTypes.SAGA_EDIT_CUSTOMER,
         pushHistory,
-        customer
+        id
     }
 }
 
-export const addCustomer = (pushHistory) =>{
+export const editCustomer = (customer, customers) =>{
+    return{
+        type: actionTypes.CUSTOMER_EDIT,
+        customer,
+        customers
+    }
+};
+
+export const navigateToAddCustomer = (pushHistory) =>{
     return{
         type: actionTypes.SAGA_ADD_CUSTOMER,
         pushHistory
@@ -32,10 +40,15 @@ export const setSelectedCustomer = (customer) => {
 };
 
 //TODO criar uma action para cada botão de ação de customers 
-export const asyncTestCustomers = (id) =>{
-    return dispatch =>{
-        console.log('teste'+ id);
-    }
+export const toggleActivateCustomer = (token, id, status, page, customers) =>{
+    return{
+        type: actionTypes.SAGA_ACTIVE_TOGGLE_CUSTOMER,
+        token: token,
+        id: id,
+        status: status,
+        page: page,
+        customers: customers
+    };
 }
 
 export const removeCustomers = (id) =>{

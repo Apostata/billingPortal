@@ -23,7 +23,7 @@ export function* sagaGetCustomers(action){
             yield put(actions.successGetCustomers(response.data));
 
             if(action.pushHistory){
-                action.pushHistory.push(`/customers/${action.page+1}`);
+                yield action.pushHistory.push(`/customers/${action.page+1}`);
             }
         }
         else{
@@ -34,25 +34,38 @@ export function* sagaGetCustomers(action){
         }
     }
     catch(error){
-        console.log(error);
+        yield console.log(error);
         yield put(actions.errorGetCustomer());
     }
 };
 
-export function* sagaEditCustomer(action){
-    yield action.pushHistory.push(`/customers/edit/${action.customer.id}`);
-}
+export function* sagaNavigateToEditCustomer(action){
+    yield action.pushHistory.push(`/customers/edit/${action.id}`);
+};
 
-export function* sagaAddCustomer(action){
-    yield action.pushHistory.push(`/customers/add`);
-}
+export function* sagaNavigateToAddCustomer(action){
+    yield action.pushHistory.push("/customers/add");
+};
 
-export function* sagaActivateCustomer(action){
+export function* sagaToggleActivateCustomer(action){
     const config = yield {
         headers:{
             Authorization: `Bearer ${action.token}`
         }
         
     };
-    axios.put(`${json.CUSTOMERS}/${action.id}/${action.status}`, null, config)
+
+    const activeOrNot = yield action.status === "ACTIVE" ? 'inactive':'active';
+    
+    try{
+        const response = yield axios.put(`${json.CUSTOMERS}/${action.id}/${activeOrNot}`, null, config);
+        yield put(actions.editCustomer(response.data, action.customers));
+    }
+    catch(error){
+        yield console.log(error);
+    }
+};
+
+export function* sagaEditCustomers(customer, customers){
+
 }

@@ -29,7 +29,7 @@ const tableColumn = (props) =>{
 
         buttons = props.children.map((action, idx) =>{
             if(action.name instanceof Object){
-                return <Button toggle={props.toggle} classes={action.classes} key={`${action.name[props.toggle]}_${idx}`} click={()=>action.action(props.id)}>{action.name[props.toggle]}</Button>
+                return <Button toggle={props.toggle} classes={action.classes} key={`${action.name[props.toggle]}_${idx}`} click={()=>action.action(props.id, props.toggle)}>{action.name[props.toggle]}</Button>
             }
             else{
                 return <Button classes={action.classes} key={`${action.name}_${idx}`} click={()=>action.action(props.id)}>{action.name}</Button>

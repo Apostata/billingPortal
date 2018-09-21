@@ -16,8 +16,9 @@ const rootReducer = combineReducers({
 
 const store = createStore(
     rootReducer,
-    composeEnhancers(applyMiddleware( sagaMiddleware))
+    composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(watchAuth);
 sagaMiddleware.run(watchCustomers);
+
 export default store;

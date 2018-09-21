@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import styles from './InputElement.scss';
+import PropTypes from 'prop-types';
 
 const input = (props) => {
 
@@ -38,7 +39,7 @@ const input = (props) => {
                 <select 
                     className={finalClasses.join(' ')}
                     {...attributes}
-                    id={id?`#${id}`:null}
+                    id={id}
                     onChange={change}
                 >
                     { renderOptions() }
@@ -46,15 +47,15 @@ const input = (props) => {
             );
             break;
         case "textarea":
-            input = <textarea id={id?`#${id}`:null} className={finalClasses.join(' ')} {...attributes} onChange={change} onChange={change}>{value||""}</textarea>;
+            input = <textarea id={id} className={finalClasses.join(' ')} {...attributes} onChange={change}>{value||""}</textarea>;
             break;
 
         default:
-            input = <input id={id?`#${id}`:null} className={finalClasses.join(' ')} value={value||""} {...attributes} onChange={change} onChange={props.change?(e)=>props.change(e,id):(e)=>{console.log(e)}}/>
+            input = <input id={id} className={finalClasses.join(' ')} value={value||""} {...attributes} onChange={props.change?(e)=>props.change(e,id):(e)=>{console.log(e)}}/>
     }
 
     if(label){
-        inputLabel = <label htmlFor={id?id:null} >{label}</label>;
+        inputLabel = <label htmlFor={id} >{label}</label>;
     }
 
     if(parent){
@@ -75,6 +76,10 @@ const input = (props) => {
     }
 
     return parentContainer;
+};
+
+input.propTypes ={
+    id: PropTypes.string.isRequired
 }
 
 export default input;

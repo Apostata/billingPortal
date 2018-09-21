@@ -19,6 +19,8 @@ export {
     successGetCustomers,
     errorGetCustomer,
     setSelectedCustomer,
-    editCustomer,
-    addCustomer
+    navigateToEditCustomer,
+    navigateToAddCustomer,
+    toggleActivateCustomer,
+    editCustomer
  } from './customers';
