@@ -8,9 +8,9 @@ import PageTitle from '../../../components/UI/PageTitle/PageTitle';
 import InputElement from '../../../components/UI/InputElement/InputElement';
 
 class AddEditCustomer extends Component{
-    //pegar o customer não customers da api
+    //pegar o customer(input) não customers da api
     // se edit, pegar o id, senão, carregar de um json mesmo os campos
-    
+
     state={
         id: this.props.match.params.id || null,
         customer: null,
