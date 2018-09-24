@@ -13,7 +13,6 @@ import AddEditCustomer from './containers/Customers/AddEditCustomer/AddEditCusto
 class App extends Component {
   
   componentDidMount(){
-    //TODO: todas as rotas que não estiverem no menu.json serão enviada para um component 404
     this.props.verifyLogged('billing', this.props);
   }
 

@@ -14,6 +14,7 @@ export {
 //customers
 export {
     asyncGetCustomers,
+    asyncGetCustomer,
     asyncTestCustomers,
     startGetCustomer,
     successGetCustomers,

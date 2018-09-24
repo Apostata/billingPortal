@@ -1,0 +1,21 @@
+{
+    "name":null,
+    "document":null,
+    "address":{
+        "street":null,
+        "complement":null,
+        "number":null,
+        "district":null,
+        "state":null,
+        "zipCode":null,
+        "city":null,
+        "country":null
+    },
+    "contact":{
+        "title":null,
+        "name":null,
+        "email":null,
+        "phone":null
+    }
+}
+    

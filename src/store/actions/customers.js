@@ -9,6 +9,14 @@ export const asyncGetCustomers = (token, page=0, pushHistory = null) =>{
     };
 }
 
+export const asyncGetCustomer = (token, id) =>{
+    return{
+        type: actionTypes.SAGA_GET_CUSTOMER,
+        token: token,
+        id:id
+    };
+}
+
 export const navigateToEditCustomer = (id, pushHistory) =>{
     return{
         type: actionTypes.SAGA_EDIT_CUSTOMER,
@@ -17,11 +25,10 @@ export const navigateToEditCustomer = (id, pushHistory) =>{
     }
 }
 
-export const editCustomer = (customer, customers) =>{
+export const editCustomer = (customer) =>{
     return{
         type: actionTypes.CUSTOMER_EDIT,
-        customer,
-        customers
+        customer
     }
 };
 
@@ -57,11 +64,6 @@ export const removeCustomers = (id) =>{
     }
 }
 
-export const activeToggleCustomer = (id, status) =>{
-    return dispatch =>{
-        console.log('teste'+ id);
-    }
-}
 
 export const startGetCustomer = ()=>{
     return{

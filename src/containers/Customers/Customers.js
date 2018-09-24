@@ -20,6 +20,7 @@ class Customers extends Component{
     componentDidMount(){
         this.mounted = true;
         const page = this.getParamPage();
+        
         if(!this.props.customers){        
             this.props.asyncGetCustomers(this.props.token, page, this.props.history);
         }
@@ -64,7 +65,9 @@ class Customers extends Component{
     }
 
     editCustomer(id){
-        const {history} = this.props;
+        const {history, customers} = this.props;
+        const customer = customers.filter(customer=> customer.id === id);
+        this.props.setSelectedCustomer(customer[0])
         this.props.navigateToEditCustomer(id, history);
     }
 
@@ -176,7 +179,7 @@ const mapStateToProps = state =>{
 const mapDispatchToProps = dispatch =>{
     return {
         asyncGetCustomers: (token, page, pushHistory, customers) => dispatch(actions.asyncGetCustomers(token, page, pushHistory, customers)),
-        asyncTestCustomers: (id) => dispatch(actions.asyncTestCustomers(id)),
+        setSelectedCustomer: (customer) => dispatch(actions.setSelectedCustomer(customer)),
         navigateToEditCustomer:(id, pushHistory) => dispatch(actions.navigateToEditCustomer(id, pushHistory)),
         navigateToAddCustomer:(pushHistory) => dispatch(actions.navigateToAddCustomer(pushHistory)),
         toggleActivateCustomer:(token, id, status, page, customers)=>dispatch(actions.toggleActivateCustomer(token, id, status, page, customers))

@@ -5,8 +5,8 @@ const initialState = {
     total: 0,
     offset: 0,
     pageSize: 20,
-    loading: false
-    //selectedCustomer: null
+    loading: false,
+    selectedCustomer: null
 };
 
 const fetchCustomers = (state, action)=>{

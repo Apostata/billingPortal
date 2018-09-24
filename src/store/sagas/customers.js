@@ -34,7 +34,6 @@ export function* sagaGetCustomers(action){
         }
     }
     catch(error){
-        yield console.log(error);
         yield put(actions.errorGetCustomer());
     }
 };
@@ -59,13 +58,32 @@ export function* sagaToggleActivateCustomer(action){
     
     try{
         const response = yield axios.put(`${json.CUSTOMERS}/${action.id}/${activeOrNot}`, null, config);
-        yield put(actions.editCustomer(response.data, action.customers));
+        yield put(actions.editCustomer(response.data));
     }
     catch(error){
         yield console.log(error);
     }
 };
 
-export function* sagaEditCustomers(customer, customers){
+export function* sagaGetCustomer(action){
+    const config = yield {
+        headers:{
+            Authorization: `Bearer ${action.token}`
+        }
+    };
 
+    yield put(actions.startGetCustomer());
+
+    try{
+        const response = yield axios.get(`${json.CUSTOMERS}/${action.id}`, config);
+        yield put(actions.setSelectedCustomer(response.data));
+    }
+    catch(error){
+        yield console.log(error);
+        yield put(actions.errorGetCustomer());
+    }
+};
+
+export function* sagaEditCustomers(customer, customers){
+    
 }

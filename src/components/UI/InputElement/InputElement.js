@@ -13,10 +13,11 @@ const input = (props) => {
     if(classes){
         var inheritedClasses = classes.split(' ');
         finalClasses.concat(inheritedClasses);
+        console.log(inheritedClasses, finalClasses)
     };
 
     finalClasses.push(styles.InputElement);
-
+    
     switch(props.element){
         case "select":
             const renderOptions = ()=>{
@@ -60,7 +61,7 @@ const input = (props) => {
 
     if(parent){
         parentContainer = (
-            <div className={parent}>
+            <div className={styles[parent]}>
                 {inputLabel}
                 {input}
             </div>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../../store/actions';
 
@@ -6,30 +6,28 @@ import PropTypes from 'prop-types';
 
 import PageTitle from '../../../components/UI/PageTitle/PageTitle';
 import InputElement from '../../../components/UI/InputElement/InputElement';
+import fieldNames from '../../../json/fieldNames.json';
 
 class AddEditCustomer extends Component{
-    //pegar o customer(input) não customers da api
-    // se edit, pegar o id, senão, carregar de um json mesmo os campos
+   // não passado classes para os inputs
 
     state={
-        id: this.props.match.params.id || null,
-        customer: null,
-        page: this.props.offset <= 1 ? 0 :  Math.ceil(this.props.offset/20),
-
-        inputs:{
-            name:{ value: "value"},
-        },
+        inputs: null,
         pageType: null
-    }
+    };
 
     componentDidMount(){
-        const {location, match, history} = this.props;
-        const {id} = this.state;
-        this.verifyCustomer(id);
+        const {location, match, history, customer} = this.props;
 
         switch(true){
             case location.pathname.indexOf('/add') !== -1:
-            
+                if(!customer){
+                    this.importCustomerStructure();
+                }
+                else{
+                    this.mountInputs(customer);
+                }
+               
                 this.setState({
                     ...this.state,
                     pageType: "Adicionar"
@@ -39,6 +37,14 @@ class AddEditCustomer extends Component{
 
             case location.pathname.indexOf('/edit') !== -1:
                 if(match.params.id){
+                    
+                    if(!customer){
+                        this.verifyCustomer(match.params.id);
+                    }
+                    else{
+                        this.mountInputs(customer);
+                    }
+                    
                     this.setState({
                         ...this.state,
                         pageType: "Editar",
@@ -63,38 +69,62 @@ class AddEditCustomer extends Component{
     }
 
     componentDidUpdate(prevProps, prevState){
-
-        const {id} = this.state;
-        if(this.props.customers !== prevProps.customers || !this.state.customer){
-            this.verifyCustomer(id);
+        const {customer} = this.props;
+        const {inputs} = this.state;
+        
+        if((customer && prevProps.customer !== customer) || (!inputs && customer)){
+            this.mountInputs(customer);
         }
+    }
+
+    mountInputs(customer){
+        let inputs ={};
+
+        const fetchCustomer = (customer) =>{
+            Object.keys(customer).forEach( node =>{
+                if(node !== "id" && node !== "status"){
+                    if(typeof customer[node] === "object" && customer[node]){
+                        fetchCustomer(customer[node])
+                    }
+                    else{
+                        //element, value, classes, id, label, parent, options, change, ...attributes
+                        inputs[node] = {};
+                        inputs[node].element = 'input';
+                        inputs[node].label = fieldNames[node];
+                        inputs[node].parent= 'input-group'
+                        inputs[node].change = this.inputOnChange.bind(this);
+                        if(this.state.pageType === 'Editar'){
+                            inputs[node].value = customer[node];
+                            inputs[node].classes = 'active teste'
+                        }
+                    }
+                }
+            })
+        };
+
+        fetchCustomer(customer);
+        
+        this.setState({
+            ...this.state,
+            inputs
+        });
         
     }
 
     verifyCustomer(id){
-        const {customers, token} = this.props;
+        const {customer, token, asyncGetCustomer} = this.props;
 
-        if(!customers){
-            this.props.asyncGetCustomers(token);
+        if(!customer){
+            asyncGetCustomer(token, id);
             return;
         }
-        else{
-            let customer;
+    }
 
-            if(!id){
-                customer = customers;
-            }
-            else{
-                customer = customers.filter(customer=>{
-                    return customer.id === Number(id)
-                })
-            }
-            
-            this.setState({
-                ...this.state,
-                customer: customer[0]
-            })
-        }
+    importCustomerStructure(){
+        const {setSelectedCustomer} = this.props;
+        import('../../../json/createCustomers.json').then(customer=>{
+            setSelectedCustomer(customer);
+        });
     }
 
     inputOnChange(e, id){
@@ -112,41 +142,79 @@ class AddEditCustomer extends Component{
     }
 
     render(){
-        const {inputs} = this.state;
-        return(
+        const {inputs, pageType} = this.state;
+        
+        const renderForm = ()=>{
+            return Object.keys(inputs).map((input, idx) => {
+                if(inputs[input].label !== "Nome" && inputs[input].label !== "Logradouro" && inputs[input].label !== "Título"){
+                    console.log(inputs[input].label);
+                    return (
+                        <InputElement
+                            id={inputs[input].label}
+                            key={`${inputs[input].label}-${idx}`}
+                            {...inputs[input]}
+                            value={pageType === 'Editar'?inputs[input].value:null} 
+                        />                        
+                    );
+                }
+                else{
+                    console.log(inputs[input].label);
+                    let title = "";
+
+                    switch(inputs[input].label){
+                        case 'Nome':
+                            title = 'Dados Pessoais';
+                            break;
+
+                        case 'Logradouro':
+                            title = 'Endereço';
+                            break;
+
+                        case 'Título':
+                            title = 'Dados para Contato';
+                            break;
+
+                        default:
+                            title= null;
+                            break;
+                    }
+
+                    return (
+                        <Fragment key={`${inputs[input].label}-${idx}`}>
+                            <h3>{title}</h3>
+                            <InputElement
+                                id={inputs[input].label}
+                                {...inputs[input]}  
+                                value={pageType === 'Editar'?inputs[input].value:null}
+                            />                      
+                        </Fragment>  
+                    );
+                }
+            })
+            
+        }
+        return (
             <article>
                 <PageTitle>{this.state.pageType} Customer</PageTitle>
                 <form>
-                    <div className="personal-data">
-                        <h2>Dados Pessoais</h2>
-                        <div className="linha">
-                            <InputElement
-                                id="oples"
-                                parent="input-group"
-                                label="Teste"
-                                value={inputs.name.value}
-                                change={this.inputOnChange.bind(this)}
-                                name="teste"
-                            />
-                        </div>
-                    </div>
+                   {inputs?renderForm():null}
                 </form>
             </article>
-        )
+        );
     }
 }
 
 const mapStateToProps = state =>{
     return {
         token: state.auth.token,
-        customers: state.customers.customers,
-        offset: state.customers.offset
+        customer: state.customers.selectedCustomer,
     };
 };
 
 const mapDispatchToProps = dispatch =>{
     return {
-        asyncGetCustomers:(token)=>dispatch(actions.asyncGetCustomers(token))
+        asyncGetCustomer:(token, id) => dispatch(actions.asyncGetCustomer(token, id)),
+        setSelectedCustomer:(customer) => dispatch(actions.setSelectedCustomer(customer))
     };
 }
 

@@ -9,6 +9,7 @@ import {
 
 import {
     sagaGetCustomers,
+    sagaGetCustomer,
     sagaNavigateToEditCustomer,
     sagaNavigateToAddCustomer,
     sagaToggleActivateCustomer
@@ -28,7 +29,8 @@ export function* watchCustomers(){
         takeEvery(actionTypes.SAGA_FETCH_CUSTOMERS, sagaGetCustomers),
         takeLatest(actionTypes.SAGA_EDIT_CUSTOMER, sagaNavigateToEditCustomer),
         takeLatest(actionTypes.SAGA_ADD_CUSTOMER, sagaNavigateToAddCustomer),
-        takeLatest(actionTypes.SAGA_ACTIVE_TOGGLE_CUSTOMER, sagaToggleActivateCustomer)
+        takeLatest(actionTypes.SAGA_ACTIVE_TOGGLE_CUSTOMER, sagaToggleActivateCustomer),
+        takeLatest(actionTypes.SAGA_GET_CUSTOMER, sagaGetCustomer)
     ]);
 };
 

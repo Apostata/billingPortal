@@ -1,0 +1,16 @@
+{
+    "name":"Nome",
+    "document":"Documento",
+    "status":"Status",
+    "street":"Logradouro",
+    "complement":"Complemento",
+    "number":"Número",
+    "district":"Bairro",
+    "state":"UF",
+    "zipCode":"CEP",
+    "city":"Cidade",
+    "country":"País",
+    "title":"Título",
+    "email":"E-mail",
+    "phone":"Telefone"
+}
