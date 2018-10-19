@@ -21,12 +21,8 @@ class AddEditCustomer extends Component{
 
         switch(true){
             case location.pathname.indexOf('/add') !== -1:
-                if(!customer){
-                    this.importCustomerStructure();
-                }
-                else{
-                    this.mountInputs(customer);
-                }
+                
+                this.importCustomerStructure();              
                
                 this.setState({
                     ...this.state,
@@ -57,7 +53,12 @@ class AddEditCustomer extends Component{
             break;
 
             default:
-
+                if(!customer){
+                    this.verifyCustomer(match.params.id);
+                }
+                else{
+                    this.mountInputs(customer);
+                }
                 this.setState({
                     ...this.state,
                     pageType: "Detalhes"
@@ -80,23 +81,39 @@ class AddEditCustomer extends Component{
     mountInputs(customer){
         let inputs ={};
 
-        const fetchCustomer = (customer) =>{
+        const fetchCustomer = (customer, parentNode = null) =>{
             Object.keys(customer).forEach( node =>{
                 if(node !== "id" && node !== "status"){
                     if(typeof customer[node] === "object" && customer[node]){
-                        fetchCustomer(customer[node])
+                        fetchCustomer(customer[node], node);
                     }
                     else{
-                        //element, value, classes, id, label, parent, options, change, ...attributes
-                        inputs[node] = {};
-                        inputs[node].element = 'input';
-                        inputs[node].label = fieldNames[node];
-                        inputs[node].parent= 'input-group'
-                        inputs[node].change = this.inputOnChange.bind(this);
-                        if(this.state.pageType === 'Editar'){
-                            inputs[node].value = customer[node];
-                            inputs[node].classes = 'active teste'
+                        let idx;
+
+                        if(parentNode){
+                            idx = {[parentNode]:node};
+                            
                         }
+                        else{
+                            idx = node;
+                        }
+                        console.log(idx);
+
+                        let id;
+                        parentNode ? id = `${parentNode}.${node}`: id = node;
+                        //element, value, classes, id, label, parent, options, change, ...attributes
+                        console.log(id);
+                        inputs[id] = {};
+                        inputs[id].element = 'input';
+                        inputs[id].label = fieldNames[node];
+                        inputs[id].id = id;
+                        inputs[id].name = id;
+                        inputs[id].parent= 'input-group';
+                        inputs[id].value = customer[node] || "";
+                        inputs[id].change = this.inputOnChange.bind(this);
+                        inputs[id].focus = this.inputOnFocus.bind(this);
+                        inputs[id].blur = this.inputOnBlur.bind(this);
+                        inputs[id].selected = false;
                     }
                 }
             })
@@ -121,14 +138,15 @@ class AddEditCustomer extends Component{
     }
 
     importCustomerStructure(){
-        const {setSelectedCustomer} = this.props;
+        //const {setSelectedCustomer} = this.props;
         import('../../../json/createCustomers.json').then(customer=>{
-            setSelectedCustomer(customer);
+            //setSelectedCustomer(customer);
+            this.mountInputs(customer);
         });
     }
 
     inputOnChange(e, id){
-        const newState = {
+        this.setState({
             ...this.state,
             inputs:{
                 ...this.state.inputs,
@@ -137,40 +155,63 @@ class AddEditCustomer extends Component{
                     value: e.target.value
                 }
             }
-        };
-        this.setState(newState);
+        });
+    }
+
+    inputOnFocus(id){
+        this.setState({
+            ...this.state,
+            inputs:{
+                ...this.state.inputs,
+                [id]:{
+                    ...this.state.inputs[id],
+                    selected: true
+                }
+            }
+        });
+    }
+
+    inputOnBlur(id){
+        this.setState({
+            ...this.state,
+            inputs:{
+                ...this.state.inputs,
+                [id]:{
+                    ...this.state.inputs[id],
+                    selected: false
+                }
+            }
+        });
     }
 
     render(){
-        const {inputs, pageType} = this.state;
+        const {inputs} = this.state;
         
         const renderForm = ()=>{
             return Object.keys(inputs).map((input, idx) => {
-                if(inputs[input].label !== "Nome" && inputs[input].label !== "Logradouro" && inputs[input].label !== "Título"){
-                    console.log(inputs[input].label);
+                if(inputs[input].id !== "name" && inputs[input].id !== "address.street" && inputs[input].id !== "contact.name"){
                     return (
                         <InputElement
-                            id={inputs[input].label}
+                            id={inputs[input].id}
                             key={`${inputs[input].label}-${idx}`}
                             {...inputs[input]}
-                            value={pageType === 'Editar'?inputs[input].value:null} 
+                            value={inputs[input].value} 
                         />                        
                     );
                 }
                 else{
-                    console.log(inputs[input].label);
                     let title = "";
 
-                    switch(inputs[input].label){
-                        case 'Nome':
+                    switch(inputs[input].id){
+                        case 'name':
                             title = 'Dados Pessoais';
                             break;
 
-                        case 'Logradouro':
+                        case 'address.street':
                             title = 'Endereço';
                             break;
 
-                        case 'Título':
+                        case 'contact.name':
                             title = 'Dados para Contato';
                             break;
 
@@ -183,9 +224,9 @@ class AddEditCustomer extends Component{
                         <Fragment key={`${inputs[input].label}-${idx}`}>
                             <h3>{title}</h3>
                             <InputElement
-                                id={inputs[input].label}
+                                id={inputs[input].id}
                                 {...inputs[input]}  
-                                value={pageType === 'Editar'?inputs[input].value:null}
+                                value={inputs[input].value}
                             />                      
                         </Fragment>  
                     );

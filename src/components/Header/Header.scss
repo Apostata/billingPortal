@@ -10,6 +10,7 @@
     background: map-get($cores, 'cinza-escuro');
     margin-bottom: 15px;
     min-height: 50px;
+    z-index: 1;
 
     .Container{
         align-items: center;

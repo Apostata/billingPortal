@@ -4,19 +4,24 @@ import PropTypes from 'prop-types';
 
 const input = (props) => {
 
-    let { element, value, classes, id, label, parent, options, change, ...attributes } = props;
+    let { element, value, classes, id, label, parent, options, change, focus, blur, selected, ...attributes } = props;
     let input, parentContainer;
     let inputLabel = null
 
     let finalClasses = [];
+    let parentClasses = [styles[parent]];
 
     if(classes){
-        var inheritedClasses = classes.split(' ');
-        finalClasses.concat(inheritedClasses);
-        console.log(inheritedClasses, finalClasses)
+        var inheritedClasses = classes.split(' ').map((classe)=>{return styles[classe]});
+        finalClasses = finalClasses.concat(inheritedClasses);
     };
 
     finalClasses.push(styles.InputElement);
+
+    if(value || selected){
+        finalClasses.push(styles['active']);
+        parentClasses.push(styles['active'])
+    }
     
     switch(props.element){
         case "select":
@@ -48,20 +53,21 @@ const input = (props) => {
             );
             break;
         case "textarea":
-            input = <textarea id={id} className={finalClasses.join(' ')} {...attributes} onChange={change}>{value||""}</textarea>;
+            input = <textarea id={id} className={finalClasses.join(' ')} {...attributes} onChange={change?(e)=>change(e,id):null} onFocus={focus?()=>focus(id):null} onBlur={blur?()=>blur(id):null}>{value || ""}</textarea>;
             break;
 
         default:
-            input = <input id={id} className={finalClasses.join(' ')} value={value||""} {...attributes} onChange={props.change?(e)=>props.change(e,id):(e)=>{console.log(e)}}/>
+            input = <input type="text" id={id} className={finalClasses.join(' ')} value={value || ""} {...attributes} onChange={change?(e)=>change(e,id):null} onFocus={focus?()=>focus(id):null} onBlur={blur?()=>blur(id):null}/>
     }
 
     if(label){
-        inputLabel = <label htmlFor={id} >{label}</label>;
+        inputLabel = <label htmlFor={id} className={finalClasses.join(' ')} >{label}</label>;
     }
 
     if(parent){
+       
         parentContainer = (
-            <div className={styles[parent]}>
+            <div className={parentClasses.join(" ")}>
                 {inputLabel}
                 {input}
             </div>

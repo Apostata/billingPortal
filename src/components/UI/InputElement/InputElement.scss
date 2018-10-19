@@ -3,23 +3,38 @@
 
 .input-group{
     position: relative;
+    padding: 18px 0 18px;
+    margin-bottom: 10px;
 
     label{
         position: absolute;
-        bottom: 1px;
+        top: 18px;
         left:0;
         padding: 0 5px;
         box-sizing: border-box;
         display: inline-block;
         z-index: -1;
+        transition: all 100ms ease-in-out 0ms;
+
+        &.active{
+            transform: translate(-5px, -18px);
+            font-size: 0.8em;
+            color: map-get($cores, 'azul-claro')
+        }
     }
 
-    .active{
-        color: red;
+    input{
+        &.InputElement{
+            border: none;
+            border-bottom: 1px solid map-get($cores, 'cinza-medio');
+            background: transparent;
+            outline: none;
+            position: relative;
+
+            
+        }
     }
+
 }
 
-.InputElement{
-    border: none;
-    border-bottom: 1px solid map-get($cores, 'cinza-medio');
-}
+
