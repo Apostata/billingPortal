@@ -3,13 +3,14 @@ import styles from './InputElement.scss';
 import PropTypes from 'prop-types';
 
 const input = (props) => {
-
-    let { element, value, classes, id, label, parent, options, change, focus, blur, selected, ...attributes } = props;
+    
+    let { element, value, classes, id, label, parent, options, change, focus, blur, selected, parentClasses, ...attributes } = props;
     let input, parentContainer;
     let inputLabel = null
 
     let finalClasses = [];
-    let parentClasses = [styles[parent]];
+    
+    let parentFinalClasses = [styles[parent]];
 
     if(classes){
         var inheritedClasses = classes.split(' ').map((classe)=>{return styles[classe]});
@@ -20,7 +21,11 @@ const input = (props) => {
 
     if(value || selected){
         finalClasses.push(styles['active']);
-        parentClasses.push(styles['active'])
+        parentFinalClasses.push(styles['active'])
+    }
+
+    if(parentClasses){
+        parentFinalClasses.push(parentClasses);
     }
     
     switch(props.element){
@@ -61,13 +66,13 @@ const input = (props) => {
     }
 
     if(label){
-        inputLabel = <label htmlFor={id} className={finalClasses.join(' ')} >{label}</label>;
+        inputLabel = <label htmlFor={id} className={finalClasses.join(' ')} >{`${label}:`}</label>;
     }
 
     if(parent){
        
         parentContainer = (
-            <div className={parentClasses.join(" ")}>
+            <div className={parentFinalClasses.join(" ")}>
                 {inputLabel}
                 {input}
             </div>

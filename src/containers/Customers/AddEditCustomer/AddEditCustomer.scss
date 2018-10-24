@@ -1,5 +1,26 @@
 @import '../../../sass/base';
+.AddEditCustomer{
+    .addEditArea{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        
+        h3{
+            width: 100%;
+            border-bottom: 1px solid map-get($cores, 'black');
+            padding-bottom: 10px;
+        }
+    }
+    .inputGroup{
+        display: flex;
+        min-width: 50%;
 
-.AddEditCustomers{
+        input{
+            width: 100%;
+        }
+        
+        label{
 
+        }
+    }
 }

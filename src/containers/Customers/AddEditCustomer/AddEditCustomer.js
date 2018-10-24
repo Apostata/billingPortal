@@ -1,12 +1,12 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../../store/actions';
-
 import PropTypes from 'prop-types';
 
 import PageTitle from '../../../components/UI/PageTitle/PageTitle';
 import InputElement from '../../../components/UI/InputElement/InputElement';
 import fieldNames from '../../../json/fieldNames.json';
+import styles from './AddEditCustomer.scss';
 
 class AddEditCustomer extends Component{
    // não passado classes para os inputs
@@ -22,7 +22,7 @@ class AddEditCustomer extends Component{
         switch(true){
             case location.pathname.indexOf('/add') !== -1:
                 
-                this.importCustomerStructure();              
+                this.importCustomerStructure();       
                
                 this.setState({
                     ...this.state,
@@ -82,33 +82,25 @@ class AddEditCustomer extends Component{
         let inputs ={};
 
         const fetchCustomer = (customer, parentNode = null) =>{
+            let parentIndex = 1;
+           
             Object.keys(customer).forEach( node =>{
+               
                 if(node !== "id" && node !== "status"){
                     if(typeof customer[node] === "object" && customer[node]){
-                        fetchCustomer(customer[node], node);
+                        fetchCustomer(customer[node], {name:node, length:Object.keys(customer[node]).length});
                     }
                     else{
-                        let idx;
-
-                        if(parentNode){
-                            idx = {[parentNode]:node};
-                            
-                        }
-                        else{
-                            idx = node;
-                        }
-                        console.log(idx);
-
                         let id;
-                        parentNode ? id = `${parentNode}.${node}`: id = node;
+                        parentNode ? id = `${parentNode.name}_${node}`: id = node;
                         //element, value, classes, id, label, parent, options, change, ...attributes
-                        console.log(id);
                         inputs[id] = {};
                         inputs[id].element = 'input';
                         inputs[id].label = fieldNames[node];
                         inputs[id].id = id;
                         inputs[id].name = id;
-                        inputs[id].parent= 'input-group';
+                        inputs[id].parentClasses = styles.inputGroup;
+                        inputs[id].parent= `inputGroup`;
                         inputs[id].value = customer[node] || "";
                         inputs[id].change = this.inputOnChange.bind(this);
                         inputs[id].focus = this.inputOnFocus.bind(this);
@@ -116,7 +108,12 @@ class AddEditCustomer extends Component{
                         inputs[id].selected = false;
                     }
                 }
-            })
+                if(parentNode){
+                    if(parentIndex > parentNode.legth) parentNode = null;
+                }
+                parentIndex ++;
+            });
+
         };
 
         fetchCustomer(customer);
@@ -138,10 +135,9 @@ class AddEditCustomer extends Component{
     }
 
     importCustomerStructure(){
-        //const {setSelectedCustomer} = this.props;
         import('../../../json/createCustomers.json').then(customer=>{
-            //setSelectedCustomer(customer);
-            this.mountInputs(customer);
+            //this.mountInputs(customer);
+            this.props.setSelectedCustomer(customer);
         });
     }
 
@@ -185,61 +181,81 @@ class AddEditCustomer extends Component{
     }
 
     render(){
-        const {inputs} = this.state;
-        
-        const renderForm = ()=>{
-            return Object.keys(inputs).map((input, idx) => {
-                if(inputs[input].id !== "name" && inputs[input].id !== "address.street" && inputs[input].id !== "contact.name"){
-                    return (
-                        <InputElement
-                            id={inputs[input].id}
-                            key={`${inputs[input].label}-${idx}`}
-                            {...inputs[input]}
-                            value={inputs[input].value} 
-                        />                        
-                    );
-                }
-                else{
-                    let title = "";
-
-                    switch(inputs[input].id){
-                        case 'name':
-                            title = 'Dados Pessoais';
-                            break;
-
-                        case 'address.street':
-                            title = 'Endereço';
-                            break;
-
-                        case 'contact.name':
-                            title = 'Dados para Contato';
-                            break;
-
-                        default:
-                            title= null;
-                            break;
-                    }
-
-                    return (
-                        <Fragment key={`${inputs[input].label}-${idx}`}>
-                            <h3>{title}</h3>
-                            <InputElement
-                                id={inputs[input].id}
-                                {...inputs[input]}  
-                                value={inputs[input].value}
-                            />                      
-                        </Fragment>  
-                    );
-                }
-            })
+        let renderPage = null;
+        if(this.props.customer && this.state.inputs){
+            const {inputs} = this.state;
+            let {customer} = this.props;
+            let {name, document, id, status, ...alteredCust} = customer;
+            alteredCust = {
+                personal:{
+                    name: customer.name,
+                    document: customer.document
+                },
+                ...alteredCust
+            }
             
-        }
-        return (
-            <article>
-                <PageTitle>{this.state.pageType} Customer</PageTitle>
+
+            const recursiveFetchField = (customer, parentNode = null)=>{
+                return Object.keys(customer).map((field, idx)=>{
+                   
+                    if(field !== "id" && field !== 'status'){
+                        
+                        if(customer[field] && typeof customer[field] === "object"){
+                           
+                            return (
+                                <div key={`${field}-${idx}`} className={[styles[`${field}Area`], styles['addEditArea']].join(' ')}>
+                                    <h3>{fieldNames.titles[field]}</h3>
+                                    {recursiveFetchField(customer[field], field)}
+                                </div>
+                            );
+                        }
+
+                        else{
+                            let input;
+                            if(parentNode && parentNode !=='personal'){
+                                input = `${parentNode}_${field}`;
+                            }
+                            else{
+                                input = field;
+                            }
+                            
+                            return returInput(input, idx);
+                        }
+                    }
+                    else{
+                      return null;
+                    }
+                    
+                });
+            };
+
+            const returInput = (input, idx)=>{
+                return(
+                    <InputElement
+                        
+                        id={inputs[input].id}
+                        key={`${inputs[input].label}-${idx}`}
+                        {...inputs[input]}
+                        value={inputs[input].value} 
+                    /> 
+                );
+            }
+            
+            const renderForm = (customer)=>{
+                return recursiveFetchField(customer);     
+            };
+
+            renderPage = (
                 <form>
-                   {inputs?renderForm():null}
+                   {inputs ? renderForm(alteredCust, 'personal') :null}
                 </form>
+            );
+        }
+
+        return(
+            <article className={styles.AddEditCustomer}>
+                <PageTitle>{this.state.pageType} Customer</PageTitle>
+                {renderPage}
             </article>
         );
     }

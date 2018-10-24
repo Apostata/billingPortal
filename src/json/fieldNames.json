@@ -12,5 +12,10 @@
     "country":"País",
     "title":"Título",
     "email":"E-mail",
-    "phone":"Telefone"
+    "phone":"Telefone",
+    "titles":{
+        "personal": "Dados Pessoais",
+        "address": "Endereço",
+        "contact": "Dados para Contato"
+    }
 }

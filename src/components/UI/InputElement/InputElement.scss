@@ -1,15 +1,16 @@
 @import '../../../sass/base';
 
 
-.input-group{
+.inputGroup{
     position: relative;
-    padding: 18px 0 18px;
+    box-sizing: border-box;
+    padding: 18px 15px;
     margin-bottom: 10px;
 
     label{
         position: absolute;
         top: 18px;
-        left:0;
+        left:15px;
         padding: 0 5px;
         box-sizing: border-box;
         display: inline-block;

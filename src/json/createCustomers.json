@@ -1,6 +1,8 @@
 {
+    "id": null,
     "name":null,
     "document":null,
+    "status":null,
     "address":{
         "street":null,
         "complement":null,
