@@ -27,7 +27,7 @@ export const navigateToEditCustomer = (id, pushHistory) =>{
 
 export const editCustomer = (customer) =>{
     return{
-        type: actionTypes.CUSTOMER_EDIT,
+        type: actionTypes.CUSTOMERS_EDIT,
         customer
     }
 };

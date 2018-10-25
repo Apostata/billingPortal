@@ -55,7 +55,7 @@ export function* sagaToggleActivateCustomer(action){
     };
 
     const activeOrNot = yield action.status === "ACTIVE" ? 'inactive':'active';
-    
+    //TODO action loadding small components start;
     try{
         const response = yield axios.put(`${json.CUSTOMERS}/${action.id}/${activeOrNot}`, null, config);
         yield put(actions.editCustomer(response.data));

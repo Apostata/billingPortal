@@ -34,7 +34,7 @@ const selectCustomer = (state, action)=>{
     }
 }
 
-const customerEdit = (state, action)=>{
+const customersEdit = (state, action)=>{
     const newCustomers = state.customers.map(customer=>{
         if(customer.id === action.customer.id){
             return action.customer;
@@ -44,7 +44,8 @@ const customerEdit = (state, action)=>{
     
     return {
         ...state,
-        customers:newCustomers
+        customers:newCustomers,
+        loading: false
     }
 };
 
@@ -59,8 +60,8 @@ const reducer = (state = initialState, action) =>{
         case actionTypes.CUSTOMER_SET_SELECTED:
             return selectCustomer(state, action);
 
-        case actionTypes.CUSTOMER_EDIT:
-            return customerEdit(state, action);
+        case actionTypes.CUSTOMERS_EDIT:
+            return customersEdit(state, action);
 
         default :
             return state;

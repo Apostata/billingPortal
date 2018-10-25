@@ -61,6 +61,7 @@ class Customers extends Component{
 
     addNewCustomer(){
         const {history} = this.props;
+        this.props.setSelectedCustomer(null);
         this.props.navigateToAddCustomer(history)
     }
 
