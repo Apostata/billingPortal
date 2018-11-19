@@ -1,12 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import InputElement from '../../../components/UI/InputElement/InputElement';
 import InputEvents from '../../../utils/Forms/InputEvents/InputEvents';
-
+//import Validator from '../../../utils/Forms/FormValidation';
 
 class Forms extends Component {
     state={
         inputs: null,
+        validForm: false
     };
+    
 
     componentDidMount(){
         let {data} = this.props;
@@ -15,11 +17,9 @@ class Forms extends Component {
 
     mountInputs(data){
         let inputs ={};
-        let {fieldNames, fieldClasses} = this.props;
-
+        let {fieldNames, fieldClasses, fieldRules} = this.props;
         const fetchData = (data, parentNode = null) =>{
-            let parentIndex = 1;
-           
+                       
             Object.keys(data).forEach( node =>{
                
                 if(typeof data[node] === "object" && data[node]){
@@ -36,11 +36,17 @@ class Forms extends Component {
                     inputs[id].name = id;
                     inputs[id].parentClasses = fieldClasses;
                     inputs[id].parent= `inputGroup`;
-                    inputs[id].value = data[node] || "";
+                    inputs[id].value = String(data[node]) || "";
+                    if(fieldRules[node]){
+                        if(fieldRules[node].mask) inputs[id].mask = fieldRules[node].mask;
+                        if(fieldRules[node].rules) inputs[id].rules = fieldRules[node].rules;
+                    }
                     inputs[id].change = InputEvents.inputOnChange.bind(this);
                     inputs[id].focus = InputEvents.inputOnFocus.bind(this);
                     inputs[id].blur = InputEvents.inputOnBlur.bind(this);
                     inputs[id].selected = false;
+                    inputs[id].errorMessage = null;
+                    inputs[id].valid = data[node] ? true : false;
                 }
 
                 
@@ -55,6 +61,10 @@ class Forms extends Component {
             inputs
         });
         
+    }
+
+    submitForm(e){
+        e.preventDefault();
     }
 
     render(){
@@ -91,18 +101,22 @@ class Forms extends Component {
 
         const returInput = (input, idx)=>{
             return(
-                <InputElement
-                    id={inputs[input].id}
-                    key={`${inputs[input].label}-${idx}`}
-                    {...inputs[input]}
-                    value={inputs[input].value} 
-                /> 
+                <Fragment key={`${inputs[input].label}-${idx}`}>
+                    <InputElement
+                        id={inputs[input].id}
+                        
+                        {...inputs[input]}
+                        value={inputs[input].value} 
+                    /> 
+                    {/* {inputs[input].rules? this.validator.message(inputs[input].label, this.state[input], inputs[input].rules): null} */}
+                </Fragment>
             );
         }
 
         return (
             <form>
                 {inputs?recursiveFetchField(data):null}
+                <button onClick={(e)=>{this.submitForm(e)}}></button>
             </form>
         )
     }

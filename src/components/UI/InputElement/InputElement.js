@@ -1,10 +1,11 @@
 import React, {Fragment} from 'react';
+import { IMaskInput } from 'react-imask';
 import styles from './InputElement.scss';
 import PropTypes from 'prop-types';
 
 const input = (props) => {
     
-    let { element, value, classes, id, label, parent, options, change, focus, blur, selected, parentClasses, ...attributes } = props;
+    let { element, value, classes, id, label, parent, options, change, focus, blur, selected, parentClasses , mask , errorMessage, valid, ...attributes } = props;
     let input, parentContainer;
     let inputLabel = null
 
@@ -62,7 +63,13 @@ const input = (props) => {
             break;
 
         default:
-            input = <input type="text" id={id} className={finalClasses.join(' ')} value={value || ""} {...attributes} onChange={change?(e)=>change(e,id):null} onFocus={focus?()=>focus(id):null} onBlur={blur?()=>blur(id):null}/>
+            if(mask){
+                if(mask[0].mask ==="Number") mask[0].mask = Number;
+                input = <IMaskInput mask={mask} type="text" id={id} className={finalClasses.join(' ')} value={value || ""} {...attributes} onChange={change?(e)=>change(e,id):null} onFocus={focus?()=>focus(id):null} onBlur={blur?()=>blur(id):null} />
+            }
+            else{
+                input = <input type="text" id={id} className={finalClasses.join(' ')} value={value || ""} {...attributes} onChange={change?(e)=>change(e,id):null} onFocus={focus?()=>focus(id):null} onBlur={blur?()=>blur(id):null} />
+            }
     }
 
     if(label){

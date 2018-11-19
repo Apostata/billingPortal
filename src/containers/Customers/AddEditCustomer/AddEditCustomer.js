@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import PageTitle from '../../../components/UI/PageTitle/PageTitle';
 import Form from '../../../components/UI/Forms/Forms';
 import Utils from '../../../utils/utils';
-import fieldNames from '../../../json/fieldNames.json';
+import fieldNames from '../../../json/AddEditCustomer_fieldNames.json';
+import fieldRules from '../../../json/AddEditCustomer_fieldRules.json';
 import styles from './AddEditCustomer.scss';
 
 class AddEditCustomer extends Component{
@@ -114,7 +115,8 @@ class AddEditCustomer extends Component{
             renderPage = (
                 <Form 
                     data={alteredCust} 
-                    fieldNames={fieldNames} 
+                    fieldNames={fieldNames}
+                    fieldRules={fieldRules} 
                     fieldClasses={styles.inputGroup} 
                     sectionClasses={[styles['addEditArea']].join(' ')}
                 >

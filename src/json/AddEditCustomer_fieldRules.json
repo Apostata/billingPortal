@@ -1,0 +1,65 @@
+{
+    "name":{
+        "rules":"required"
+    },
+
+    "document":{
+        "mask": [
+            {
+                "mask": "000.000.000-00",
+                "lazy": true
+            },
+            {
+                "mask": "00.000.000/0000-00",
+                "lazy": true
+            }
+        ],
+        "rules":"required"
+    },
+
+    "phone":{
+        "mask": [
+            {
+                "mask": "(00) 0000-0000[0]",
+                "lazy": true
+            }
+        ],
+        "rules":"phone"
+    },
+
+    "zipCode":{
+        "mask": [
+            {
+                "mask": "00000-000",
+                "lazy": true
+            }
+        ],
+        "rules":"required"
+    },
+    
+    "state":{
+        "rules":"required"
+    },
+
+    "city":{
+        "rules":"required"
+    },
+
+    "street":{
+        "rules":"required"
+    },
+    
+    "number":{
+        "mask":[
+            {
+                "mask": "Number",
+                "scale": 0
+            }
+        ],
+        "rules":"required"
+    },
+
+    "email":{
+        "rules":"required|email"
+    }
+}

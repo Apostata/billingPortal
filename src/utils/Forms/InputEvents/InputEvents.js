@@ -1,3 +1,5 @@
+import Validator from '../FormValidation';
+
 export default class InputEvents{
     static inputOnChange(e, id){
         this.setState({
@@ -26,15 +28,23 @@ export default class InputEvents{
     }
 
     static inputOnBlur(id){
+        const errorMessage = Validator.fieldValidation(this.state.inputs[id].label, this.state.inputs[id].value, this.state.inputs[id].rules);
+
         this.setState({
             ...this.state,
             inputs:{
                 ...this.state.inputs,
                 [id]:{
                     ...this.state.inputs[id],
-                    selected: false
+                    selected: false,
+                    errorMessage: errorMessage ? errorMessage : null
                 }
             }
         });
+    }
+
+
+    static fillAddress(){
+        
     }
 }
